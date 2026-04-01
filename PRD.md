@@ -1,144 +1,143 @@
-# Frisky Dev Syndicate Hub — THE FORGE
+# Frisky Dev — Command-Driven Studio Interface
 
-A high-fidelity, million-dollar command interface using pure Obsidian-Noir aesthetics (#050505) that showcases enterprise-grade technical operations through cinematic boot sequences, heavy inertial physics, and glassmorphic vessels arranged in true pentad topology.
+A boutique development studio interface that prioritizes command-driven interaction and narrative system output over traditional dashboard presentation. The product is the command hero experience and narrative system, with the dashboard serving as supporting depth that appears after interaction.
 
 **Experience Qualities**:
-1. **Cinematic** - Every visual element feels like it belongs in a high-budget sci-fi interface, with smooth inertial physics and atmospheric depth
-2. **Authoritative** - The interface communicates technical mastery and operational control through precise typography and structured information architecture
-3. **Hypnotic** - The animated vortex background and synchronized interactions create a mesmerizing, focused experience that draws users into the system
+1. **Controlled** - Minimal, confident interactions with no loud marketing or over-explanation. Every element serves a clear purpose in the command-driven hierarchy.
+2. **Narrative** - Information is presented as structured system output, not traditional marketing sections. Users navigate through command responses and terminal-style formatting.
+3. **Layered** - The interface reveals depth progressively: hero command → narrative content → system dashboard. Everything exists in one continuous visual language.
 
 **Complexity Level**: Light Application (multiple features with basic state)
-This is a real-time status dashboard with animated visualizations and interactive modules. While visually sophisticated, the core functionality is straightforward monitoring and display.
+A command-driven interface with authentication, narrative content presentation, and real-time monitoring dashboard. While visually sophisticated with layered reveal mechanics, the core functionality remains focused and minimal.
 
 ## Essential Features
 
-**Ingress Terminal Boot Sequence (Master Forge Protocol)**
-- Functionality: Full-screen terminal overlay displaying the exact Forge Hero command sequence: blinking cursor → `frisky@forge:~$ boot_syndicate` → `[OK] GHOST_AUTHORITY_SYNCED` → `[OK] VOID_LINE_CONNECTED_NODE_1132` → `frisky@forge:~$ enter_forge` → vortex accelerates → vessels fade in
-- Purpose: Establishes authority and exclusivity through precise command-line ritual that feels like accessing a proprietary system
+**Ingress Terminal Boot Sequence**
+- Functionality: Full-screen terminal overlay displaying Forge command sequence before revealing main interface
+- Purpose: Establishes technical authority through command-line ritual that sets the tone for the entire experience
 - Trigger: Plays automatically on application load
-- Progression: Blinking cursor (0ms) → Type command (1200ms) → Authority sync response (2400ms) → Void line connection (3000ms) → Enter forge command (3800ms) → Fade out and reveal dashboard (4500ms)
-- Success criteria: Cursor blinks smoothly, commands type naturally, responses appear with Signal Violet and Neon Cyan accents, fade-out is seamless with heavy inertia, total duration ~4.5 seconds
+- Progression: Blinking cursor → `frisky@forge:~$ boot_syndicate` → Authority sync → Void line connection → `enter_forge` command → Fade to hero
+- Success criteria: Smooth command typing effect, responses appear with Signal Violet and Neon Cyan accents, seamless transition to hero layer
 
-**The Vortex Background**
-- Functionality: 3D canvas rendering 80 cryptographic data strings flying from center toward viewer with motion blur and depth-based blur effects
-- Purpose: Creates atmospheric depth and reinforces the "data stream" metaphor of active operations with significantly increased visual presence
-- Trigger: Loads on mount, runs continuously behind boot sequence
-- Progression: Initialize canvas → Generate 80 crypto strings → Animate toward viewer in 3D space with increased speed → Apply progressive blur → Enhanced glow and shadow effects → Respond to module hover states
-- Success criteria: Smooth 60fps animation, strings are readable with depth blur, color shifts based on active module, 2x particle density creates immersive tunnel effect
+**Command Hero (Primary Layer)**
+- Functionality: Persistent command prompt accepting user input with authentication capability and Ghost ID generation
+- Purpose: Serves as the main identity and entry point of Frisky—the product IS this command-driven interaction, not the dashboard
+- Trigger: Appears after boot sequence completes
+- Progression: User sees prompt → Types "auth" → System verifies and generates Ghost_ID → Narrative layer becomes accessible → System layer appears
+- Success criteria: Input is responsive and terminal-accurate, Ghost ID feels generated (not preset), authentication unlocks deeper layers, all commands provide clear feedback
 
-**The Pentad Architecture (5 Vessel Modules)**
-- Functionality: Five glassmorphic cards arranged in true pentad topology (cross pattern) displaying live telemetry data with unique accent colors and staggered entrance animations
-- Purpose: Provides at-a-glance status of all syndicate operations in organized, spatially-logical topology that emphasizes THE ENGINE as central command authority
-- Trigger: Renders after enhanced boot sequence with staggered delays: VOID_LINE (0.5s) → INTAKE (0.6s) → ENGINE (0.7s) → SHADOW (0.8s) → ANCHOR (0.9s)
-- Progression: Boot complete → Cards appear in pentad layout → ENGINE scales 110% with dominant violet glow → Display live telemetry → Hover triggers physics response and vortex focus → Return to idle state
-- Success criteria: Pentad layout is visually clear (top-middle-sides-bottom arrangement), ENGINE dominates as visual anchor with enhanced glow, stagger timing reinforces spatial relationships, hover effects use cubic-bezier inertial curves
+**Narrative Layer (Secondary Content)**
+- Functionality: Structured system output presenting studio information as command responses, not marketing copy
+- Purpose: Communicates what Frisky is, what it does, who it works with—all within command-driven world without breaking character
+- Trigger: Appears after authentication, directly below hero
+- Progression: User scrolls → Each section appears as formatted system output → Content reveals progressively → Terminal-style formatting throughout
+- Success criteria: Sections feel like command responses (→ query format), content is precise and minimal, no traditional headings or SaaS language, maintains boutique studio tone
 
-**The Engine Module (Center)**
-- Functionality: Central command module with 110% scale, animated wolf-head SVG, enhanced glow aura, and core system status—serves as the dominant visual and operational authority of the entire interface
-- Purpose: Serves as the PRIMARY visual anchor and authority indicator for the entire system, establishing clear hierarchy and command structure
-- Trigger: Pulsing animation starts on load, enhanced glow is constant
-- Progression: Render wolf SVG at larger scale → Apply continuous pulse animation → Display CORE_ACTIVE status with larger typography → Apply 40px glow with 80px diffuse shadow → Respond to interactions
-- Success criteria: SVG pulses smoothly at 2-second intervals, module is noticeably larger than surrounding vessels, violet glow creates visible aura, status text uses 30px font vs 24px for other modules
+**System Layer (Dashboard - Tertiary Depth)**
+- Functionality: Five glassmorphic vessel modules arranged in pentad topology displaying live telemetry (THE ENGINE at center, surrounded by VOID_LINE, INTAKE, SHADOW, ANCHOR)
+- Purpose: Provides supporting technical depth showing operational status—acts as deeper system access, not primary focus
+- Trigger: Appears after narrative layer, either on scroll or automatic reveal
+- Progression: User enters system layer → Vessels appear with staggered timing → Live telemetry updates → Hover interactions respond → System terminal shows activity
+- Success criteria: Dashboard feels like entering deeper into the system, not like a separate page, maintains same visual language as hero and narrative layers
 
-**The System Hum Terminal**
-- Functionality: Fixed footer displaying scrolling real-time system logs with timestamps
-- Purpose: Creates ambient "liveness" and reinforces the operational nature of the interface
-- Trigger: Auto-scrolls continuously with new log entries every 3-8 seconds, appears after boot sequence
-- Progression: Boot complete → Terminal appears → Generate log entry → Append to terminal → Auto-scroll → Fade old entries → Loop
-- Success criteria: Logs scroll smoothly, messages are contextually relevant, no performance impact
+**The Vortex Background (Continuous Atmosphere)**
+- Functionality: Animated background with cryptographic data strings creating depth and movement
+- Purpose: Provides unified atmospheric layer that connects all three interface layers into one continuous system
+- Trigger: Loads on mount, runs continuously across all layers
+- Progression: Renders behind all content → Creates depth perception → Maintains consistent visual presence → No hard transitions between layers
+- Success criteria: Background feels alive but not distracting, connects hero → narrative → dashboard seamlessly
 
-**Live Telemetry System**
+**Live Telemetry System (System Layer Only)**
 - Functionality: Simulated real-time data updates for bandwidth, signal strength, temperature, load, and other operational metrics
-- Purpose: Creates sense of living, active system with dynamic operational data
-- Trigger: Starts updating after boot sequence completes
-- Progression: Initialize baseline values → Update every 2 seconds with realistic variance → Display in vessel cards → Continue indefinitely
-- Success criteria: Values change smoothly, ranges stay realistic, updates don't cause visual jank
+- Purpose: Makes the system layer feel operational and alive when user reaches that depth
+- Trigger: Starts updating when system layer becomes visible
+- Progression: Initialize baseline values → Update every 2 seconds → Display in vessel cards → Continue while visible
+- Success criteria: Values change realistically, updates are smooth, data reinforces operational nature
 
-**Inertial Hover Physics**
-- Functionality: Premium inertial motion system using cubic-bezier(0.16, 1, 0.3, 1) with 0.8s duration on all interactive elements
-- Purpose: Creates high-end, intentional feel that distinguishes interface from standard web interactions—every motion should feel like operating million-dollar equipment
-- Trigger: Any hover state on interactive elements, especially vessel cards
-- Progression: Detect hover → Apply translateY(-5px) + scale(1.02) transform with inertial curve → Sync vortex color shift → Intensify card border and glow → Return with matching curve on leave
-- Success criteria: All animations feel weighty and premium with visible momentum, no janky transitions, hover feels like moving physical objects with real mass
+**Inertial Physics**
+- Functionality: Premium motion system using cubic-bezier(0.16, 1, 0.3, 1) with 0.8s duration on interactive elements
+- Purpose: Creates boutique, controlled feel across all interactions—everything should feel intentional and premium
+- Trigger: Any interaction, especially hover states and scroll reveals
+- Progression: Detect interaction → Apply transform with inertial curve → Return with matching physics
+- Success criteria: All animations feel weighty and controlled, no jarring transitions, interactions feel intentional not reactive
 
 ## Edge Case Handling
 
-**Canvas Performance** - If frame rate drops below 30fps, reduce particle count dynamically
-**Mobile/Tablet** - Simplify vortex to 2D gradient animation, maintain module functionality
-**Browser Compatibility** - Fallback to static gradient if Canvas/WebGL unavailable
+**No Authentication** - Hero remains visible and functional, narrative layer accessible but system layer stays hidden
+**Canvas Performance** - If frame rate drops below 30fps, reduce particle count or simplify animation
+**Mobile/Tablet** - Single column layout, simplified vortex animation, command prompt remains functional
+**Browser Compatibility** - Fallback to static gradient if Canvas unavailable, all text content remains accessible
 **Reduced Motion** - Respect prefers-reduced-motion with static background and instant transitions
-**Long Log Messages** - Truncate with ellipsis, ensure terminal doesn't overflow container
+**Long Command Input** - Truncate with ellipsis if input exceeds container width
 
 ## Design Direction
 
-The interface should evoke the feeling of commanding a sophisticated technical operation—like standing in a high-tech war room or NOC (Network Operations Center). Every element should communicate precision, power, and intentionality. The dark obsidian base creates a void for luminous technical data to float within, while the animated vortex suggests constant data flow and processing. The glassmorphic vessels feel like they're carved from light and shadow, with specular highlights that catch the eye like polished metal or obsidian glass.
+The interface should evoke boutique studio confidence—controlled, minimal, never loud. The experience centers on command-driven interaction, establishing that Frisky is accessed through terminal-style engagement, not clicked through like a website. The dark obsidian base creates focused workspace where luminous data and system responses float. Information is presented as structured system output with terminal-style formatting, short precise statements, and clear hierarchy. The vortex background suggests constant processing without demanding attention. As users progress from hero → narrative → system, they should feel they're entering deeper into a unified system, not navigating between pages. Everything maintains the same visual language: glassmorphic elements, specular highlights, controlled motion, and technical precision. The tone is boutique, confident, and minimal—avoiding generic SaaS layouts, marketing copy, or over-explanation.
 
 ## Color Selection
 
-The palette is built around **pure Obsidian-Noir (#050505)** as the Deep Void surface—eliminating all standard UI conventions in favor of focused, technical precision. Signal frequencies punctuate the darkness.
+The palette is built around **pure Obsidian-Noir `oklch(0.02 0 0)`** as the Deep Void surface—creating focused, boutique workspace aesthetic. Signal frequencies punctuate the darkness for command feedback and system responses.
 
-- **Surface Foundation**: Pure Obsidian-Noir `oklch(0.02 0 0)` (#050505) - The Deep Void, eliminates distraction and creates the million-dollar focused workspace aesthetic
-- **Primary Color**: Signal Violet `oklch(0.59 0.24 293) / rgba(139, 92, 246, 0.5)` - Represents cryptographic authority, used at 50% opacity for active node accents
+- **Surface Foundation**: Pure Obsidian-Noir `oklch(0.02 0 0)` - The Deep Void, eliminates distraction and creates controlled workspace
+- **Primary Color**: Signal Violet `oklch(0.59 0.24 293)` - Command prompts, active states, system authority
 - **Secondary Colors**: 
-  - Oxygen Blue `oklch(0.61 0.18 254)` (#3B82F6) - Technical precision, VOID_LINE signals
-  - Matrix Green `oklch(0.72 0.19 142)` (#10B981) - Active processing, INTAKE telemetry
-  - Ghost Grey `oklch(0.50 0.01 264)` - Neutral technical data, ANCHOR logs
-- **Accent Color**: Neon Cyan `oklch(0.77 0.14 195)` (#06B6D4) - Critical status indicators, boot sequence highlights
+  - Oxygen Blue `oklch(0.61 0.18 254)` - System responses, verified states
+  - Matrix Green `oklch(0.72 0.19 142)` - Success confirmations, active processing
+  - Ghost Grey `oklch(0.50 0.01 264)` - Muted system output, secondary data
+- **Accent Color**: Neon Cyan `oklch(0.77 0.14 195)` - Critical status, authentication confirmations
 - **Foreground/Background Pairings**:
   - Deep Void `oklch(0.02 0 0)`: Pure White `oklch(0.98 0 0)` - Ratio 21.0:1 ✓
-  - Glassmorphic Cards `oklch(0.08 0 0 / 0.3)`: Pure White - Ratio 15.8:1 ✓
-  - Signal Violet (50%): White - Ratio 5.2:1 ✓
+  - Command Input BG `oklch(0.08 0 0 / 0.3)`: Pure White - Ratio 15.8:1 ✓
+  - Signal Violet: White - Ratio 5.2:1 ✓
   - Neon Cyan: Deep Void - Ratio 8.4:1 ✓
 
 ## Font Selection
 
-Typography must communicate technical precision and operational clarity, with ultra-light display weights creating an expensive, refined aesthetic against the dark background.
+Typography communicates boutique studio precision and technical clarity with ultra-light display weights creating refined, confident aesthetic against dark background.
 
 - **Typographic Hierarchy**:
-  - H1 (Main Title "FRISKY DEV SYNDICATE"): Inter Extra Light / 56px desktop, 48px mobile / 0.4em letter-spacing / uppercase
-  - H2 (Module Headers): Inter Extra Light / 24px / 0.3em letter-spacing / uppercase
-  - H2 (ENGINE Module Header): Inter Extra Light / 30px / 0.3em letter-spacing / uppercase (larger for dominance)
-  - H3 (Status Labels): JetBrains Mono Regular / 12px / 0.1em letter-spacing / uppercase
-  - Body (Technical Data): JetBrains Mono Light / 14px / normal letter-spacing / monospace
-  - Caption (Terminal Logs): JetBrains Mono Light / 14px with color coding / normal letter-spacing / 0.9 line-height
+  - H1 (Hero Title "Frisky"): Inter Extra Light / 96px desktop, 64px mobile / 0.4em letter-spacing / uppercase
+  - H2 (Layer Headers): Inter Extra Light / 32px / 0.3em letter-spacing / uppercase
+  - Command Prompt: JetBrains Mono Regular / 14px / normal letter-spacing / monospace
+  - Body (Narrative Content): Inter Light / 14px / normal letter-spacing / comfortable line-height
+  - Technical Data Labels: JetBrains Mono Light / 12px / 0.1em letter-spacing / uppercase
+  - System Output: JetBrains Mono Light / 14px / normal letter-spacing / 0.9 line-height
 
 ## Animations
 
-Animations serve four key purposes: establish spatial depth (enhanced vortex tunnel), provide interaction feedback (inertial hover physics), communicate system hierarchy (ENGINE dominance), and indicate system activity (pulsing, scrolling). The vortex creates an immersive data tunnel with 2x particle density that makes users feel like they're inside the data flow. Hover interactions use heavy 0.8s inertial curves (cubic-bezier(0.16, 1, 0.3, 1)) that feel like operating physical, high-value equipment—not snappy or cheap web buttons. THE ENGINE pulse provides the system's visual heartbeat at 2s intervals. Terminal scrolling with color-coded logs creates sophisticated ambient activity. The pentad layout entrance uses staggered timing (0.5s to 0.9s delays) that draws the eye from top → center → periphery, establishing spatial relationships. All animations must feel synchronized and purposeful, never arbitrary or distracting.
+Animations serve three key purposes: establish continuous atmosphere (vortex background), provide subtle interaction feedback (command input, scroll reveals), and maintain boutique controlled feel (inertial physics on all interactions). The vortex creates unified depth across all layers—hero, narrative, and system—without hard transitions. Command input uses blinking cursor and typing effects that feel terminal-authentic. Narrative sections reveal on scroll with staggered timing that feels intentional, not automatic. System layer entrance uses same staggered approach as original dashboard but feels like descending deeper into the system. All interactive elements use heavy 0.8s inertial curves (cubic-bezier(0.16, 1, 0.3, 1)) that feel controlled and premium—never snappy or web-like. Vessel cards in system layer maintain specular glint and hover physics. Every animation must feel synchronized with the boutique, minimal, confident tone—nothing arbitrary or distracting.
 
 ## Component Selection
 
 - **Components**: 
-  - Custom Canvas component for vortex background (Three.js or raw Canvas API)
-  - Custom VesselCard glassmorphic containers with hover states
-  - ScrollArea from Shadcn for terminal logs
-  - Badge for status indicators (modified with glow effects)
+  - Custom CommandHero with text input and response display
+  - Custom NarrativeLayer with scroll-triggered reveals
+  - Custom SystemLayer wrapper for existing dashboard vessels
+  - Existing VortexBackground (maintains continuous atmosphere)
+  - Existing VesselCard glassmorphic containers (system layer only)
+  - Existing SystemTerminal (system layer only)
 - **Customizations**: 
-  - Glassmorphic cards with backdrop-filter blur, 1px borders, and animated specular highlights
-  - Custom wolf SVG with CSS pulse animation
-  - Terminal component with auto-scroll and fade gradient
-  - Vortex canvas that responds to React state for color shifts
+  - Command input styled as terminal with blinking cursor
+  - Narrative sections formatted as system output with left border
+  - All three layers share same glassmorphic/backdrop-filter aesthetic
+  - Seamless visual language across hero → narrative → system
 - **States**: 
-  - Cards: idle (subtle border), hover (specular glint animation + translateY(-5px) + scale(1.02) with 0.8s inertial curve, vortex color shift), active (sustained glow)
-  - ENGINE card: idle includes 40px + 80px layered glow, 60% stronger border (rgba opacity), 110% scale, hover amplifies glow further
-  - Status badges: pulsing glow for active states, static for idle
-  - Terminal: new log entries fade in with color coding (cyan for auth, green for success, violet for critical, white for system, muted for modules), old entries maintain color but reduce opacity
+  - Command input: idle (blinking cursor), active (user typing), response (system feedback with color coding)
+  - Narrative sections: hidden (below viewport), revealing (scroll trigger), visible (in viewport)
+  - System layer: hidden (pre-authentication), appearing (staggered vessel entrance), visible (full interaction)
+  - Vessel cards in system layer: maintain existing hover physics with specular glint
 - **Icon Selection**: 
-  - Custom wolf-head SVG for ENGINE module
-  - Phosphor icons for module states: Lightning (INTAKE), Radio (VOID_LINE), Ghost (SHADOW), Database (ANCHOR)
+  - Phosphor icons for system layer modules (Radio, Lightning, Ghost, Database)
+  - Custom wolf SVG for ENGINE module
+  - Minimal icon use in hero and narrative layers (text-focused)
 - **Spacing**: 
-  - Container padding: 8 (32px) for main layout
-  - Card padding: 6 (24px) internal
-  - Gap between cards in pentad grid: 6 (24px)
-  - Pentad grid: CSS Grid 3 columns, explicit row placement for cross/pentad topology
-  - ENGINE module: positioned at row 2, column 2 (center) with 110% scale applied via transform
-  - Terminal padding: 4 (16px)
-  - Maximum content width: 1280px (7xl) for optimal pentad spacing
+  - Hero: centered, max-w-4xl, generous vertical padding
+  - Narrative: py-32, max-w-5xl, 24-unit gaps between sections
+  - System layer: py-32, max-w-6xl, existing pentad grid spacing
+  - Consistent 8px base padding throughout
 - **Mobile**: 
-  - Vortex simplifies to animated gradient (no canvas on <768px)
-  - Pentad grid collapses to single column with order: VOID_LINE → INTAKE → ENGINE (maintains visual prominence) → SHADOW → ANCHOR
-  - ENGINE scale reduces to 100% on mobile but maintains enhanced glow
-  - Terminal height reduces from 120px to 80px
-  - Letter-spacing reduces to 0.2em for readability
-  - Card transforms reduce to translateY(-3px) on hover (no scale)
-  - Header font size reduces to 48px
+  - Command input remains full-width and functional
+  - Narrative collapses to single column with maintained spacing
+  - System layer vessels stack vertically (existing mobile behavior)
+  - Vortex simplifies to gradient (existing mobile behavior)
+  - All text remains readable with adjusted letter-spacing
