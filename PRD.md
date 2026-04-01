@@ -12,19 +12,26 @@ This is a real-time status dashboard with animated visualizations and interactiv
 
 ## Essential Features
 
+**Ingress Terminal Boot Sequence**
+- Functionality: Full-screen terminal overlay displaying boot logs before revealing the main dashboard
+- Purpose: Creates cinematic "wow" moment and reinforces the high-tech, exclusive nature of the system
+- Trigger: Plays automatically on application load
+- Progression: Display terminal → Show connection logs → Authenticate Ghost_ID → Load modules sequentially → Dissolve into dashboard
+- Success criteria: Terminal text types smoothly, logs appear in sequence, fade-out is seamless, total duration ~4.5 seconds
+
 **The Vortex Background**
 - Functionality: 3D canvas rendering cryptographic data strings flying from center toward viewer with motion blur
 - Purpose: Creates atmospheric depth and reinforces the "data stream" metaphor of active operations
-- Trigger: Loads on mount, runs continuously
+- Trigger: Loads on mount, runs continuously behind boot sequence
 - Progression: Initialize canvas → Generate crypto strings → Animate toward viewer in 3D space → Apply motion blur → Respond to module hover states
 - Success criteria: Smooth 60fps animation, strings are readable but blurred, color shifts based on active module
 
 **The Pentad Architecture (5 Vessel Modules)**
-- Functionality: Five glassmorphic cards displaying different operational telemetry with unique accent colors
+- Functionality: Five glassmorphic cards displaying live telemetry data with unique accent colors and staggered entrance animations
 - Purpose: Provides at-a-glance status of all syndicate operations in organized, scannable format
-- Trigger: Renders on load with staggered entrance animations
-- Progression: Cards fade in with inertial motion → Display real-time status → Hover triggers physics response and vortex focus → Return to idle state
-- Success criteria: Each module displays unique data, hover effects are smooth with cubic-bezier curves, specular borders are visible
+- Trigger: Renders after boot sequence with 150ms stagger between each card
+- Progression: Boot complete → Cards slam in sequentially with inertial motion → Display live telemetry → Hover triggers physics response and vortex focus → Return to idle state
+- Success criteria: Each module displays live updating data, stagger timing feels intentional, hover effects are smooth with cubic-bezier curves, specular borders are visible
 
 **The Engine Module (Center)**
 - Functionality: Central command module with animated wolf-head SVG and core system status
@@ -36,9 +43,16 @@ This is a real-time status dashboard with animated visualizations and interactiv
 **The System Hum Terminal**
 - Functionality: Fixed footer displaying scrolling real-time system logs with timestamps
 - Purpose: Creates ambient "liveness" and reinforces the operational nature of the interface
-- Trigger: Auto-scrolls continuously with new log entries every 3-8 seconds
-- Progression: Generate log entry → Append to terminal → Auto-scroll → Fade old entries → Loop
+- Trigger: Auto-scrolls continuously with new log entries every 3-8 seconds, appears after boot sequence
+- Progression: Boot complete → Terminal appears → Generate log entry → Append to terminal → Auto-scroll → Fade old entries → Loop
 - Success criteria: Logs scroll smoothly, messages are contextually relevant, no performance impact
+
+**Live Telemetry System**
+- Functionality: Simulated real-time data updates for bandwidth, signal strength, temperature, load, and other operational metrics
+- Purpose: Creates sense of living, active system with dynamic operational data
+- Trigger: Starts updating after boot sequence completes
+- Progression: Initialize baseline values → Update every 2 seconds with realistic variance → Display in vessel cards → Continue indefinitely
+- Success criteria: Values change smoothly, ranges stay realistic, updates don't cause visual jank
 
 **Inertial Hover Physics**
 - Functionality: Heavy easing curves on all interactions using cubic-bezier(0.16, 1, 0.3, 1)
