@@ -13,11 +13,11 @@ interface VortexBackgroundProps {
   focusColor?: string
 }
 
-const cryptoStrings = [
-  'GX-7A2B', 'SIG_VOID', 'INTAKE_ACTIVE', 'NODE_1132', 'GHOST_ID',
-  'CORE_PRIME', 'VOID_LINE', 'AUTH_OK', 'SIGNAL_ACK', 'VAULT_OPEN',
-  'CIPHER_X9', 'DELTA_7', 'SYNC_ACTIVE', 'STREAM_OK', 'WOLF_CORE',
-  'HASH_7F2A', 'KEY_ALPHA', 'OMEGA_SEC', 'BREACH_NO', 'SECURE_YES'
+const FRISKY_RUNE_STRINGS = [
+  'ᚠRISK', 'SIGIL', 'WOLF', 'RUNE', 'VOID', 'GLYPH', 'SHADOW',  
+  'ANCHOR', 'SYN', 'VEIL', 'GLASS', 'CIPHER', 'MYTH', 'FRISKY',
+  'NODE_1132', 'GHOST_GX', 'CORE', 'STREAM', 'SIGNAL', 'FRACTURE',
+  '◬◭◮', '⟡⟢⟣', '⌬⌭⌮', '△▽◇', '⬡⬢⬣', 'ᚱᚢᚾᛖ'
 ]
 
 export function VortexBackground({ focusColor }: VortexBackgroundProps) {
@@ -40,13 +40,13 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
     window.addEventListener('resize', resizeCanvas)
 
     const initDataStrings = () => {
-      dataStringsRef.current = Array.from({ length: 80 }, () => ({
-        text: cryptoStrings[Math.floor(Math.random() * cryptoStrings.length)],
-        x: (Math.random() - 0.5) * 1200,
-        y: (Math.random() - 0.5) * 1200,
-        z: Math.random() * 2000 + 500,
-        speed: Math.random() * 3 + 1.5,
-        opacity: Math.random() * 0.6 + 0.4
+      dataStringsRef.current = Array.from({ length: 120 }, () => ({
+        text: FRISKY_RUNE_STRINGS[Math.floor(Math.random() * FRISKY_RUNE_STRINGS.length)],
+        x: (Math.random() - 0.5) * 1400,
+        y: (Math.random() - 0.5) * 1400,
+        z: Math.random() * 2500 + 500,
+        speed: Math.random() * 2.5 + 1,
+        opacity: Math.random() * 0.7 + 0.3
       }))
     }
     initDataStrings()
@@ -62,16 +62,16 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
         str.z -= str.speed
 
         if (str.z <= 0) {
-          str.z = 2000
-          str.x = (Math.random() - 0.5) * 1200
-          str.y = (Math.random() - 0.5) * 1200
-          str.text = cryptoStrings[Math.floor(Math.random() * cryptoStrings.length)]
+          str.z = 2500
+          str.x = (Math.random() - 0.5) * 1400
+          str.y = (Math.random() - 0.5) * 1400
+          str.text = FRISKY_RUNE_STRINGS[Math.floor(Math.random() * FRISKY_RUNE_STRINGS.length)]
         }
 
         const scale = 1000 / str.z
         const x = centerX + str.x * scale
         const y = centerY + str.y * scale
-        const size = (1 - str.z / 2000) * 24 + 10
+        const size = (1 - str.z / 2500) * 28 + 8
 
         if (x < -100 || x > canvas.width + 100 || y < -100 || y > canvas.height + 100) {
           return
@@ -79,24 +79,26 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
 
         const baseColor = focusColor || '#8B5CF6'
         const blueColor = '#3B82F6'
-        const progress = (str.z / 2000)
+        const cyanColor = '#06B6D4'
+        const progress = (str.z / 2500)
         const depth = 1 - progress
         
         ctx.save()
-        ctx.globalAlpha = str.opacity * depth
+        ctx.globalAlpha = str.opacity * depth * 0.8
         
-        const gradient = ctx.createLinearGradient(x - 30, y, x + 30, y)
+        const gradient = ctx.createLinearGradient(x - 40, y, x + 40, y)
         gradient.addColorStop(0, baseColor)
-        gradient.addColorStop(1, blueColor)
+        gradient.addColorStop(0.5, blueColor)
+        gradient.addColorStop(1, cyanColor)
         
         ctx.fillStyle = gradient
         ctx.font = `${size}px 'JetBrains Mono', monospace`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         
-        ctx.shadowBlur = 20 + (depth * 15)
+        ctx.shadowBlur = 25 + (depth * 20)
         ctx.shadowColor = baseColor
-        ctx.filter = `blur(${progress * 1.5}px)`
+        ctx.filter = `blur(${progress * 2}px)`
         ctx.fillText(str.text, x, y)
         
         ctx.restore()

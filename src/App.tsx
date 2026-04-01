@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { VortexBackground } from '@/components/VortexBackground'
 import { VesselCard } from '@/components/VesselCard'
 import { SystemTerminal } from '@/components/SystemTerminal'
-import { IngressTerminal } from '@/components/IngressTerminal'
+import { CinematicIntro } from '@/components/CinematicIntro'
 import { WolfIcon } from '@/components/WolfIcon'
 import { Lightning, Radio, Ghost, Database } from '@phosphor-icons/react'
 import { useTelemetry } from '@/hooks/use-telemetry'
@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-      {!bootComplete && <IngressTerminal onBootComplete={() => setBootComplete(true)} />}
+      {!bootComplete && <CinematicIntro onComplete={() => setBootComplete(true)} />}
       
       <div className="min-h-screen relative pb-32">
         <VortexBackground focusColor={focusColor} />
