@@ -10,6 +10,7 @@ interface VesselCardProps {
   onHover?: () => void
   onLeave?: () => void
   isCenter?: boolean
+  isEngine?: boolean
 }
 
 export function VesselCard({
@@ -20,24 +21,30 @@ export function VesselCard({
   data,
   onHover,
   onLeave,
-  isCenter = false
+  isCenter = false,
+  isEngine = false
 }: VesselCardProps) {
   return (
     <div
       className={cn(
         'vessel-card rounded-lg p-6 relative overflow-hidden',
-        isCenter && 'md:col-span-2'
+        isCenter && 'md:col-span-2',
+        isEngine && 'shadow-2xl'
       )}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       style={{
-        borderColor: `${accentColor}20`
+        borderColor: isEngine ? `${accentColor}60` : `${accentColor}20`,
+        boxShadow: isEngine ? `0 0 40px ${accentColor}30, 0 0 80px ${accentColor}15` : undefined
       }}
     >
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
           <h2
-            className="text-2xl font-extralight tracking-[0.3em] uppercase"
+            className={cn(
+              "font-extralight tracking-[0.3em] uppercase",
+              isEngine ? "text-3xl" : "text-2xl"
+            )}
             style={{ color: accentColor }}
           >
             {title}

@@ -40,19 +40,19 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
     window.addEventListener('resize', resizeCanvas)
 
     const initDataStrings = () => {
-      dataStringsRef.current = Array.from({ length: 40 }, () => ({
+      dataStringsRef.current = Array.from({ length: 80 }, () => ({
         text: cryptoStrings[Math.floor(Math.random() * cryptoStrings.length)],
-        x: (Math.random() - 0.5) * 1000,
-        y: (Math.random() - 0.5) * 1000,
+        x: (Math.random() - 0.5) * 1200,
+        y: (Math.random() - 0.5) * 1200,
         z: Math.random() * 2000 + 500,
-        speed: Math.random() * 2 + 1,
-        opacity: Math.random() * 0.5 + 0.3
+        speed: Math.random() * 3 + 1.5,
+        opacity: Math.random() * 0.6 + 0.4
       }))
     }
     initDataStrings()
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.15)'
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.12)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       const centerX = canvas.width / 2
@@ -63,15 +63,15 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
 
         if (str.z <= 0) {
           str.z = 2000
-          str.x = (Math.random() - 0.5) * 1000
-          str.y = (Math.random() - 0.5) * 1000
+          str.x = (Math.random() - 0.5) * 1200
+          str.y = (Math.random() - 0.5) * 1200
           str.text = cryptoStrings[Math.floor(Math.random() * cryptoStrings.length)]
         }
 
         const scale = 1000 / str.z
         const x = centerX + str.x * scale
         const y = centerY + str.y * scale
-        const size = (1 - str.z / 2000) * 20 + 8
+        const size = (1 - str.z / 2000) * 24 + 10
 
         if (x < -100 || x > canvas.width + 100 || y < -100 || y > canvas.height + 100) {
           return
@@ -80,11 +80,12 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
         const baseColor = focusColor || '#8B5CF6'
         const blueColor = '#3B82F6'
         const progress = (str.z / 2000)
+        const depth = 1 - progress
         
         ctx.save()
-        ctx.globalAlpha = str.opacity * (1 - progress)
+        ctx.globalAlpha = str.opacity * depth
         
-        const gradient = ctx.createLinearGradient(x - 20, y, x + 20, y)
+        const gradient = ctx.createLinearGradient(x - 30, y, x + 30, y)
         gradient.addColorStop(0, baseColor)
         gradient.addColorStop(1, blueColor)
         
@@ -93,8 +94,9 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         
-        ctx.shadowBlur = 15
+        ctx.shadowBlur = 20 + (depth * 15)
         ctx.shadowColor = baseColor
+        ctx.filter = `blur(${progress * 1.5}px)`
         ctx.fillText(str.text, x, y)
         
         ctx.restore()

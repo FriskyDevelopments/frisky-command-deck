@@ -17,10 +17,11 @@ const COLORS = {
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: {
     opacity: 1,
-    y: 0
+    y: 0,
+    scale: 1
   }
 }
 
@@ -40,49 +41,27 @@ function App() {
           initial={{ opacity: 0 }}
           animate={{ opacity: bootComplete ? 1 : 0 }}
           transition={{ duration: 0.5 }}
-          className="relative z-10 container mx-auto px-8 py-12"
+          className="relative z-10 container mx-auto px-8 py-12 max-w-7xl"
         >
           <motion.header 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: bootComplete ? 1 : 0, y: bootComplete ? 0 : -20 }}
             transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-16 text-center"
+            className="mb-20 text-center"
           >
-            <h1 className="text-5xl md:text-6xl font-extralight tracking-[0.4em] uppercase mb-4 text-foreground">
+            <h1 className="text-5xl md:text-7xl font-extralight tracking-[0.4em] uppercase mb-4 text-foreground">
               Frisky Dev Syndicate
             </h1>
-            <div className="h-px w-64 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent" />
+            <div className="h-px w-80 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent" />
           </motion.header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             <motion.div
               initial="hidden"
               animate={bootComplete ? "visible" : "hidden"}
               variants={cardVariants}
-              transition={{ delay: 0, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <VesselCard
-                title="THE INTAKE"
-                status="REMUX_ACTIVE"
-                accentColor={COLORS.matrixGreen}
-                icon={<Lightning size={32} weight="duotone" />}
-                data={[
-                  'yt-dlp: v2024.1.15',
-                  `Queue: ${telemetry.queueSize} pending`,
-                  'Format: mp4/webm',
-                  `Bandwidth: ${Math.round(telemetry.bandwidth)} Mbps`,
-                  'Status: Processing'
-                ]}
-                onHover={() => setFocusColor(COLORS.matrixGreen)}
-                onLeave={() => setFocusColor(COLORS.signalViolet)}
-              />
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              animate={bootComplete ? "visible" : "hidden"}
-              variants={cardVariants}
-              transition={{ delay: 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="md:col-start-2"
             >
               <VesselCard
                 title="THE VOID_LINE"
@@ -105,24 +84,22 @@ function App() {
               initial="hidden"
               animate={bootComplete ? "visible" : "hidden"}
               variants={cardVariants}
-              transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="md:col-span-2"
+              transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <VesselCard
-                title="THE ENGINE"
-                status="CORE_ACTIVE"
-                accentColor={COLORS.signalViolet}
-                icon={<WolfIcon className="w-8 h-8 wolf-pulse" />}
+                title="THE INTAKE"
+                status="REMUX_ACTIVE"
+                accentColor={COLORS.matrixGreen}
+                icon={<Lightning size={32} weight="duotone" />}
                 data={[
-                  'Core: ONLINE',
-                  `Temp: ${Math.round(telemetry.temperature)}°C`,
-                  `Load: ${Math.round(telemetry.load)}%`,
-                  `Uptime: ${telemetry.uptime.toFixed(1)}%`,
-                  'Protocol: Wolf Active'
+                  'yt-dlp: v2024.1.15',
+                  `Queue: ${telemetry.queueSize} pending`,
+                  'Format: mp4/webm',
+                  `Bandwidth: ${Math.round(telemetry.bandwidth)} Mbps`,
+                  'Status: Processing'
                 ]}
-                onHover={() => setFocusColor(COLORS.signalViolet)}
+                onHover={() => setFocusColor(COLORS.matrixGreen)}
                 onLeave={() => setFocusColor(COLORS.signalViolet)}
-                isCenter
               />
             </motion.div>
 
@@ -130,7 +107,35 @@ function App() {
               initial="hidden"
               animate={bootComplete ? "visible" : "hidden"}
               variants={cardVariants}
-              transition={{ delay: 0.45, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.7, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="md:col-start-2 md:row-start-2"
+            >
+              <div className="scale-110 origin-center">
+                <VesselCard
+                  title="THE ENGINE"
+                  status="CORE_ACTIVE"
+                  accentColor={COLORS.signalViolet}
+                  icon={<WolfIcon className="w-10 h-10 wolf-pulse" />}
+                  data={[
+                    'Core: ONLINE',
+                    `Temp: ${Math.round(telemetry.temperature)}°C`,
+                    `Load: ${Math.round(telemetry.load)}%`,
+                    `Uptime: ${telemetry.uptime.toFixed(1)}%`,
+                    'Protocol: Wolf Active'
+                  ]}
+                  onHover={() => setFocusColor(COLORS.signalViolet)}
+                  onLeave={() => setFocusColor(COLORS.signalViolet)}
+                  isEngine
+                />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              animate={bootComplete ? "visible" : "hidden"}
+              variants={cardVariants}
+              transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="md:col-start-3 md:row-start-2"
             >
               <VesselCard
                 title="THE SHADOW"
@@ -153,7 +158,8 @@ function App() {
               initial="hidden"
               animate={bootComplete ? "visible" : "hidden"}
               variants={cardVariants}
-              transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.9, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="md:col-start-2 md:row-start-3"
             >
               <VesselCard
                 title="THE ANCHOR"

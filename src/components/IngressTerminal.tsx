@@ -5,37 +5,45 @@ interface IngressTerminalProps {
   onBootComplete: () => void
 }
 
+interface BootLog {
+  delay: number
+  text: string
+  type: 'system' | 'auth' | 'success' | 'module' | 'critical'
+}
+
 const bootSequence = [
-  { delay: 0, text: '> INITIALIZING SYNDICATE HUB...' },
-  { delay: 400, text: '> ESTABLISHING SECURE CONNECTION...' },
-  { delay: 800, text: '> CONNECTING TO SYNDICATE REPOSITORIES...' },
-  { delay: 1400, text: '> AUTHENTICATING GHOST_ID GX-7A2B...' },
-  { delay: 1800, text: '> LOADING CORE MODULES...' },
-  { delay: 2200, text: '  ├─ THE INTAKE: LOADED' },
-  { delay: 2400, text: '  ├─ THE VOID_LINE: LOADED' },
-  { delay: 2600, text: '  ├─ THE ENGINE: LOADED' },
-  { delay: 2800, text: '  ├─ THE SHADOW: LOADED' },
-  { delay: 3000, text: '  └─ THE ANCHOR: LOADED' },
-  { delay: 3400, text: '> ACTIVATING WOLF PROTOCOL...' },
-  { delay: 3800, text: '> SYNC COMPLETE. WELCOME TO THE SYNDICATE.' },
-  { delay: 4200, text: '> ENGAGING COMMAND INTERFACE...' }
+  { delay: 0, text: '> INITIALIZING SYNDICATE HUB...', type: 'system' },
+  { delay: 400, text: '> ESTABLISHING SECURE CONNECTION...', type: 'system' },
+  { delay: 800, text: '> CONNECTING TO SYNDICATE REPOSITORIES...', type: 'system' },
+  { delay: 1400, text: '> AUTHENTICATING GHOST_ID GX-7A2B...', type: 'auth' },
+  { delay: 1800, text: '  ✓ GHOST VERIFIED', type: 'success' },
+  { delay: 2000, text: '> LOADING CORE MODULES...', type: 'system' },
+  { delay: 2300, text: '  ├─ initializing intake...', type: 'module' },
+  { delay: 2500, text: '  ├─ linking void_line...', type: 'module' },
+  { delay: 2700, text: '  ├─ waking engine...', type: 'module' },
+  { delay: 2900, text: '  ├─ syncing shadow...', type: 'module' },
+  { delay: 3100, text: '  └─ anchor locked.', type: 'module' },
+  { delay: 3500, text: '> ACTIVATING WOLF PROTOCOL...', type: 'critical' },
+  { delay: 3900, text: '  ✓ WOLF_CORE ONLINE', type: 'success' },
+  { delay: 4200, text: '> SYNC COMPLETE. WELCOME TO THE SYNDICATE.', type: 'success' },
+  { delay: 4600, text: '> ENGAGING COMMAND INTERFACE...', type: 'system' }
 ]
 
 export function IngressTerminal({ onBootComplete }: IngressTerminalProps) {
-  const [logs, setLogs] = useState<string[]>([])
+  const [logs, setLogs] = useState<BootLog[]>([])
   const [isComplete, setIsComplete] = useState(false)
 
   useEffect(() => {
-    bootSequence.forEach(({ delay, text }) => {
+    bootSequence.forEach(({ delay, text, type }) => {
       setTimeout(() => {
-        setLogs(prev => [...prev, text])
+        setLogs(prev => [...prev, { delay, text, type }])
       }, delay)
     })
 
     setTimeout(() => {
       setIsComplete(true)
       setTimeout(onBootComplete, 800)
-    }, 4600)
+    }, 5000)
   }, [onBootComplete])
 
   return (
@@ -56,17 +64,26 @@ export function IngressTerminal({ onBootComplete }: IngressTerminalProps) {
         </div>
 
         <div className="space-y-2 font-mono text-sm">
-          {logs.map((log, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }}
-              className="text-foreground/90"
-            >
-              {log}
-            </motion.div>
-          ))}
+          {logs.map((log, index) => {
+            const colorClass = 
+              log.type === 'success' ? 'text-[var(--matrix-green)]' :
+              log.type === 'critical' ? 'text-primary' :
+              log.type === 'auth' ? 'text-[var(--neon-cyan)]' :
+              log.type === 'module' ? 'text-muted-foreground' :
+              'text-foreground/90'
+            
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className={colorClass}
+              >
+                {log.text}
+              </motion.div>
+            )
+          })}
           {logs.length > 0 && !isComplete && (
             <motion.div
               animate={{ opacity: [1, 0, 1] }}
