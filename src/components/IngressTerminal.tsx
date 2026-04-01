@@ -36,7 +36,7 @@ export function IngressTerminal({ onBootComplete }: IngressTerminalProps) {
   useEffect(() => {
     bootSequence.forEach(({ delay, text, type }) => {
       setTimeout(() => {
-        setLogs(prev => [...prev, { delay, text, type }])
+        setLogs(prev => [...prev, { delay, text, type } as BootLog])
       }, delay)
     })
 

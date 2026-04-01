@@ -13,7 +13,7 @@ interface VortexBackgroundProps {
   focusColor?: string
 }
 
-const FRISKY_RUNE_STRINGS = [
+const cryptoStrings = [
   'ᚠRISK', 'SIGIL', 'WOLF', 'RUNE', 'VOID', 'GLYPH', 'SHADOW',  
   'ANCHOR', 'SYN', 'VEIL', 'GLASS', 'CIPHER', 'MYTH', 'FRISKY',
   'NODE_1132', 'GHOST_GX', 'CORE', 'STREAM', 'SIGNAL', 'FRACTURE',
@@ -41,7 +41,7 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
 
     const initDataStrings = () => {
       dataStringsRef.current = Array.from({ length: 120 }, () => ({
-        text: FRISKY_RUNE_STRINGS[Math.floor(Math.random() * FRISKY_RUNE_STRINGS.length)],
+        text: cryptoStrings[Math.floor(Math.random() * cryptoStrings.length)],
         x: (Math.random() - 0.5) * 1400,
         y: (Math.random() - 0.5) * 1400,
         z: Math.random() * 2500 + 500,
@@ -65,7 +65,7 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
           str.z = 2500
           str.x = (Math.random() - 0.5) * 1400
           str.y = (Math.random() - 0.5) * 1400
-          str.text = FRISKY_RUNE_STRINGS[Math.floor(Math.random() * FRISKY_RUNE_STRINGS.length)]
+          str.text = cryptoStrings[Math.floor(Math.random() * cryptoStrings.length)]
         }
 
         const scale = 1000 / str.z
