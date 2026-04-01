@@ -52,7 +52,7 @@ export function VortexBackground({ focusColor }: VortexBackgroundProps) {
     initDataStrings()
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.12)'
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.15)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       const centerX = canvas.width / 2

@@ -1,100 +1,103 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface IngressTerminalProps {
-  onBootComplete: () => void
+  onComplete: () => void
 }
 
-interface BootLog {
-  delay: number
+type LogEntry = {
   text: string
-  type: 'system' | 'auth' | 'success' | 'module' | 'critical'
+  delay: number
+  type: 'cursor' | 'command' | 'response'
 }
 
-const bootSequence = [
-  { delay: 0, text: '> INITIALIZING SYNDICATE HUB...', type: 'system' },
-  { delay: 400, text: '> ESTABLISHING SECURE CONNECTION...', type: 'system' },
-  { delay: 800, text: '> CONNECTING TO SYNDICATE REPOSITORIES...', type: 'system' },
-  { delay: 1400, text: '> AUTHENTICATING GHOST_ID GX-7A2B...', type: 'auth' },
-  { delay: 1800, text: '  ✓ GHOST VERIFIED', type: 'success' },
-  { delay: 2000, text: '> LOADING CORE MODULES...', type: 'system' },
-  { delay: 2300, text: '  ├─ initializing intake...', type: 'module' },
-  { delay: 2500, text: '  ├─ linking void_line...', type: 'module' },
-  { delay: 2700, text: '  ├─ waking engine...', type: 'module' },
-  { delay: 2900, text: '  ├─ syncing shadow...', type: 'module' },
-  { delay: 3100, text: '  └─ anchor locked.', type: 'module' },
-  { delay: 3500, text: '> ACTIVATING WOLF PROTOCOL...', type: 'critical' },
-  { delay: 3900, text: '  ✓ WOLF_CORE ONLINE', type: 'success' },
-  { delay: 4200, text: '> SYNC COMPLETE. WELCOME TO THE SYNDICATE.', type: 'success' },
-  { delay: 4600, text: '> ENGAGING COMMAND INTERFACE...', type: 'system' }
+const BOOT_SEQUENCE: LogEntry[] = [
+  { text: '_', delay: 0, type: 'cursor' },
+  { text: 'frisky@forge:~$ boot_syndicate', delay: 1200, type: 'command' },
+  { text: '[OK] GHOST_AUTHORITY_SYNCED', delay: 2400, type: 'response' },
+  { text: '[OK] VOID_LINE_CONNECTED_NODE_1132', delay: 3000, type: 'response' },
+  { text: 'frisky@forge:~$ enter_forge', delay: 3800, type: 'command' }
 ]
 
-export function IngressTerminal({ onBootComplete }: IngressTerminalProps) {
-  const [logs, setLogs] = useState<BootLog[]>([])
-  const [isComplete, setIsComplete] = useState(false)
+export function IngressTerminal({ onComplete }: IngressTerminalProps) {
+  const [visibleLogs, setVisibleLogs] = useState<LogEntry[]>([])
+  const [fadeOut, setFadeOut] = useState(false)
 
   useEffect(() => {
-    bootSequence.forEach(({ delay, text, type }) => {
+    BOOT_SEQUENCE.forEach((log) => {
       setTimeout(() => {
-        setLogs(prev => [...prev, { delay, text, type } as BootLog])
-      }, delay)
+        setVisibleLogs((prev) => [...prev, log])
+      }, log.delay)
     })
 
     setTimeout(() => {
-      setIsComplete(true)
-      setTimeout(onBootComplete, 800)
-    }, 5000)
-  }, [onBootComplete])
+      setFadeOut(true)
+      setTimeout(onComplete, 800)
+    }, 4500)
+  }, [onComplete])
 
   return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      animate={{ opacity: isComplete ? 0 : 1 }}
-      transition={{ duration: 0.8 }}
-      className="fixed inset-0 z-[100] bg-background flex items-center justify-center"
-      style={{ pointerEvents: isComplete ? 'none' : 'auto' }}
-    >
-      <div className="w-full max-w-3xl px-8">
-        <div className="mb-8 flex items-center gap-4">
-          <div className="w-3 h-3 rounded-full bg-primary animate-pulse" />
-          <div className="text-xs uppercase tracking-[0.3em] text-primary font-light">
-            Syndicate Ingress Terminal
-          </div>
-          <div className="flex-1 h-px bg-gradient-to-r from-primary/50 to-transparent" />
-        </div>
+    <AnimatePresence>
+      {!fadeOut && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          style={{ background: '#050505' }}
+        >
+          <div className="w-full max-w-3xl px-8">
+            <div className="space-y-3">
+              {visibleLogs.map((log, index) => {
+                const isCursor = log.type === 'cursor'
+                const isCommand = log.type === 'command'
+                const isResponse = log.type === 'response'
 
-        <div className="space-y-2 font-mono text-sm">
-          {logs.map((log, index) => {
-            const colorClass = 
-              log.type === 'success' ? 'text-[var(--matrix-green)]' :
-              log.type === 'critical' ? 'text-primary' :
-              log.type === 'auth' ? 'text-[var(--neon-cyan)]' :
-              log.type === 'module' ? 'text-muted-foreground' :
-              'text-foreground/90'
-            
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                className={colorClass}
-              >
-                {log.text}
-              </motion.div>
-            )
-          })}
-          {logs.length > 0 && !isComplete && (
-            <motion.div
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-              className="text-primary"
-            >
-              ▊
-            </motion.div>
-          )}
-        </div>
-      </div>
-    </motion.div>
+                return (
+                  <motion.div
+                    key={`${log.text}-${index}`}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: isCursor ? 0 : 0.3,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
+                    className="font-mono tracking-wide"
+                    style={{
+                      fontSize: isCommand ? '18px' : '16px',
+                      color: isCursor
+                        ? 'rgba(139, 92, 246, 0.9)'
+                        : isCommand
+                        ? 'rgba(139, 92, 246, 0.8)'
+                        : 'rgba(6, 182, 212, 0.9)',
+                      textShadow: isCursor
+                        ? '0 0 15px rgba(139, 92, 246, 0.6)'
+                        : isResponse
+                        ? '0 0 10px rgba(6, 182, 212, 0.4)'
+                        : 'none',
+                      letterSpacing: '0.08em'
+                    }}
+                  >
+                    {isCursor && (
+                      <motion.span
+                        animate={{ opacity: [1, 0, 1] }}
+                        transition={{
+                          duration: 1.2,
+                          repeat: Infinity,
+                          ease: 'linear'
+                        }}
+                      >
+                        {log.text}
+                      </motion.span>
+                    )}
+                    {!isCursor && log.text}
+                  </motion.div>
+                )
+              })}
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }

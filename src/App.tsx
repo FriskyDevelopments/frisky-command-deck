@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { VortexBackground } from '@/components/VortexBackground'
 import { VesselCard } from '@/components/VesselCard'
 import { SystemTerminal } from '@/components/SystemTerminal'
-import { CinematicIntro } from '@/components/CinematicIntro'
+import { IngressTerminal } from '@/components/IngressTerminal'
+import { SystemPulse } from '@/components/SystemPulse'
 import { WolfIcon } from '@/components/WolfIcon'
 import { Lightning, Radio, Ghost, Database } from '@phosphor-icons/react'
 import { useTelemetry } from '@/hooks/use-telemetry'
@@ -28,11 +29,25 @@ const cardVariants = {
 function App() {
   const [focusColor, setFocusColor] = useState<string>(COLORS.signalViolet)
   const [bootComplete, setBootComplete] = useState(false)
+  const [pulseActive, setPulseActive] = useState(false)
   const telemetry = useTelemetry()
+
+  useEffect(() => {
+    if (!bootComplete) return
+
+    const interval = setInterval(() => {
+      setPulseActive(true)
+      setTimeout(() => setPulseActive(false), 1200)
+    }, 15000)
+
+    return () => clearInterval(interval)
+  }, [bootComplete])
 
   return (
     <>
-      {!bootComplete && <CinematicIntro onComplete={() => setBootComplete(true)} />}
+      {!bootComplete && <IngressTerminal onComplete={() => setBootComplete(true)} />}
+      
+      <SystemPulse trigger={pulseActive} />
       
       <div className="min-h-screen relative pb-32">
         <VortexBackground focusColor={focusColor} />

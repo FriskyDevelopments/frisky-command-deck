@@ -1,6 +1,6 @@
-# Frisky Dev Syndicate Hub
+# Frisky Dev Syndicate Hub — THE FORGE
 
-A high-fidelity, million-dollar command interface that showcases enterprise-grade technical operations through a cinematic, physics-driven glassmorphic experience.
+A high-fidelity, million-dollar command interface using pure Obsidian-Noir aesthetics (#050505) that showcases enterprise-grade technical operations through cinematic boot sequences, heavy inertial physics, and glassmorphic vessels arranged in true pentad topology.
 
 **Experience Qualities**:
 1. **Cinematic** - Every visual element feels like it belongs in a high-budget sci-fi interface, with smooth inertial physics and atmospheric depth
@@ -12,12 +12,12 @@ This is a real-time status dashboard with animated visualizations and interactiv
 
 ## Essential Features
 
-**Ingress Terminal Boot Sequence**
-- Functionality: Full-screen terminal overlay displaying color-coded boot logs with semantic type indicators before revealing the main dashboard
-- Purpose: Creates enhanced cinematic "wow" moment with sophisticated visual hierarchy and reinforces the high-tech, exclusive nature of the system
+**Ingress Terminal Boot Sequence (Master Forge Protocol)**
+- Functionality: Full-screen terminal overlay displaying the exact Forge Hero command sequence: blinking cursor → `frisky@forge:~$ boot_syndicate` → `[OK] GHOST_AUTHORITY_SYNCED` → `[OK] VOID_LINE_CONNECTED_NODE_1132` → `frisky@forge:~$ enter_forge` → vortex accelerates → vessels fade in
+- Purpose: Establishes authority and exclusivity through precise command-line ritual that feels like accessing a proprietary system
 - Trigger: Plays automatically on application load
-- Progression: Display terminal → Show connection logs (white) → Authenticate Ghost_ID (cyan) → Success verification (green) → Load modules sequentially (muted) → Activate Wolf Protocol (violet/critical) → Sync complete (green) → Dissolve into dashboard
-- Success criteria: Terminal text types smoothly with color-coded semantics, logs appear with proper timing, module load sequence explicitly lists each vessel, fade-out is seamless, total duration ~5 seconds with refined pacing
+- Progression: Blinking cursor (0ms) → Type command (1200ms) → Authority sync response (2400ms) → Void line connection (3000ms) → Enter forge command (3800ms) → Fade out and reveal dashboard (4500ms)
+- Success criteria: Cursor blinks smoothly, commands type naturally, responses appear with Signal Violet and Neon Cyan accents, fade-out is seamless with heavy inertia, total duration ~4.5 seconds
 
 **The Vortex Background**
 - Functionality: 3D canvas rendering 80 cryptographic data strings flying from center toward viewer with motion blur and depth-based blur effects
@@ -75,20 +75,20 @@ The interface should evoke the feeling of commanding a sophisticated technical o
 
 ## Color Selection
 
-The palette is built around deep space and signal frequencies—obsidian void punctuated by vibrant technical accent colors.
+The palette is built around **pure Obsidian-Noir (#050505)** as the Deep Void surface—eliminating all standard UI conventions in favor of focused, technical precision. Signal frequencies punctuate the darkness.
 
-- **Primary Color**: Signal Violet `oklch(0.59 0.24 293)` (#8B5CF6) - Represents cryptographic authority and the SHADOW module, communicates exclusivity and technical depth
+- **Surface Foundation**: Pure Obsidian-Noir `oklch(0.02 0 0)` (#050505) - The Deep Void, eliminates distraction and creates the million-dollar focused workspace aesthetic
+- **Primary Color**: Signal Violet `oklch(0.59 0.24 293) / rgba(139, 92, 246, 0.5)` - Represents cryptographic authority, used at 50% opacity for active node accents
 - **Secondary Colors**: 
-  - Oxygen Blue `oklch(0.61 0.18 254)` (#3B82F6) - Technical precision, used for VOID_LINE signals
-  - Matrix Green `oklch(0.72 0.19 142)` (#10B981) - Active processing, used for INTAKE telemetry
-  - Ghost Grey `oklch(0.55 0.01 264)` (#71717A) - Neutral technical data, used for ANCHOR logs
-- **Accent Color**: Neon Cyan `oklch(0.77 0.14 195)` (#06B6D4) - Attention-grabbing for critical status indicators and interactive states
+  - Oxygen Blue `oklch(0.61 0.18 254)` (#3B82F6) - Technical precision, VOID_LINE signals
+  - Matrix Green `oklch(0.72 0.19 142)` (#10B981) - Active processing, INTAKE telemetry
+  - Ghost Grey `oklch(0.50 0.01 264)` - Neutral technical data, ANCHOR logs
+- **Accent Color**: Neon Cyan `oklch(0.77 0.14 195)` (#06B6D4) - Critical status indicators, boot sequence highlights
 - **Foreground/Background Pairings**:
-  - Obsidian Base `oklch(0.10 0 0)` (#050505): Pure White `oklch(0.98 0 0)` (#FAFAFA) - Ratio 18.3:1 ✓
-  - Glassmorphic Cards `oklch(0.15 0 0 / 0.4)`: Pure White - Ratio 12.1:1 ✓
-  - Signal Violet: White - Ratio 5.2:1 ✓
-  - Oxygen Blue: White - Ratio 4.9:1 ✓
-  - Matrix Green: Obsidian - Ratio 6.8:1 ✓
+  - Deep Void `oklch(0.02 0 0)`: Pure White `oklch(0.98 0 0)` - Ratio 21.0:1 ✓
+  - Glassmorphic Cards `oklch(0.08 0 0 / 0.3)`: Pure White - Ratio 15.8:1 ✓
+  - Signal Violet (50%): White - Ratio 5.2:1 ✓
+  - Neon Cyan: Deep Void - Ratio 8.4:1 ✓
 
 ## Font Selection
 
