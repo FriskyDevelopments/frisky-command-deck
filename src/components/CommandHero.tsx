@@ -169,70 +169,61 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     ].join('\n')
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
+    e.preventDefault()
     if (!input.trim()) return
 
-    const command = input.toLowerCase().trim()
-    let response = ''
-    let type: 'success' | 'info' | 'error' = 'info'
 
-    if (command === 'auth' || command === 'authenticate') {
-      const id = `GX-${Math.random().toString(36).substr(2, 4).toUpperCase()}`
-      setGhostId(id)
+    let response = ''
+    let response = ''s' | 'info' | 'error' = 'info'
+    let type: 'success' | 'info' | 'error' = 'info'
+e') {
+    if (command === 'auth' || command === 'authenticate') { 4).toUpperCase()}`
       setIsAuthenticated(true)
-      response = `GHOST_AUTHORITY_VERIFIED :: ${id}\nACCESS_GRANTED :: SYNDICATE_LEVEL`
+      setGhostId(id)
       type = 'success'
       setTimeout(() => {
-        onAuthenticated?.(id)
       }, 1200)
-    } else if (command === 'about') {
-      response = getAboutText()
-      type = 'info'
-    } else if (command === 'contact') {
-      response = getContactText()
-      type = 'info'
-    } else if (command === 'vessels') {
-      response = getVesselsText()
-      type = 'success'
     } else if (command === 'help' || command === '?') {
       response = getHelpText()
-      type = 'info'
+      }, 1200)
     } else if (command === 'status') {
-      response = getSystemStatus()
       type = 'success'
-    } else if (command === 'projects') {
+      type = 'info'
       response = getProjectsList()
       type = 'info'
     } else if (command === 'clear') {
-      setHistory([])
+    } else if (command === 'projects') {
       setInput('')
       return
     } else {
-      response = `UNKNOWN_COMMAND :: "${input}"\nTYPE "help" FOR AVAILABLE COMMANDS`
       type = 'error'
-    }
+      setInput('')
 
     setHistory(prev => [...prev, { command: input, response, type }])
     setInput('')
-  }
 
-  const getResponseColor = (type: 'success' | 'info' | 'error') => {
-    switch (type) {
+    }pe: 'success' | 'info' | 'error') => {
+ switch (type) {
       case 'success':
         return 'rgba(6, 182, 212, 0.9)'
       case 'error':
         return 'rgba(239, 68, 68, 0.8)'
-      default:
-        return 'rgba(156, 163, 175, 0.9)'
-    }
-  }
+  const getResponseColor = (type: 'success' | 'info' | 'error') => {
+    switch (type) {a(156, 163, 175, 0.9)'
+      case 'success':
+        return 'rgba(6, 182, 212, 0.9)'
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-8">
       <div className="w-full max-w-4xl">
-        <motion.div
+    }
+  }
+y: 1, y: 0 }}
+  return (, ease: [0.16, 1, 0.3, 1] }}
+    <div className="relative min-h-screen flex items-center justify-center px-8">
+      <div className="w-full max-w-4xl">
+          <h1 className="text-6xl md:text-8xl font-extralight tracking-[0.4em] uppercase mb-6 text-foreground">
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -241,12 +232,6 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
           <h1 className="text-6xl md:text-8xl font-extralight tracking-[0.4em] uppercase mb-6 text-foreground">
             Frisky
           </h1>
-          <div className="h-px w-96 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent mb-8" />
-          <p className="font-mono text-sm text-muted-foreground tracking-wider uppercase">
-            Boutique Development Studio
-          </p>
-        </motion.div>
-
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -256,15 +241,6 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
             <AnimatePresence>
               {history.map((entry, idx) => (
                 <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center gap-3 px-6 py-2 bg-card/10 backdrop-blur-sm border border-border/20 rounded-lg">
-                    <span className="font-mono text-muted-foreground text-xs shrink-0">
                       frisky@forge:~$
                     </span>
                     <span className="font-mono text-sm text-foreground/70">
@@ -276,6 +252,21 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
                     <pre
                       className="font-mono text-xs whitespace-pre-wrap"
                       style={{
+                        color: getResponseColor(entry.type),
+                        textShadow: entry.type === 'success' 
+                          ? '0 0 10px rgba(6, 182, 212, 0.3)'
+                          : 'none'
+                      }}
+                    >
+                      {entry.response}
+                    </pre>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          <form onSubmit={handleSubmit} className="relative">
                         color: getResponseColor(entry.type),
                         textShadow: entry.type === 'success' 
                           ? '0 0 10px rgba(6, 182, 212, 0.3)'
@@ -311,21 +302,6 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
             </div>
           </form>
 
-          {isAuthenticated && ghostId && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="mt-8 text-center"
-            >
-              <p className="font-mono text-xs text-muted-foreground tracking-wider uppercase mb-2">
-                Ghost ID Active
-              </p>
-              <p className="font-mono text-primary text-lg tracking-widest">
-                {ghostId}
-              </p>
-            </motion.div>
-          )}
         </motion.div>
       </div>
     </div>
