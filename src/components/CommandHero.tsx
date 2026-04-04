@@ -24,6 +24,44 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     { name: 'FLAT_LEDGER', status: 'SYNCED', desc: 'Immutable audit trail' }
   ]
 
+  const vessels = [
+    { 
+      id: 'THE_ENGINE', 
+      status: 'CORE_ACTIVE', 
+      frequency: 'Signal Violet',
+      role: 'Central orchestration and Wolf-core authority',
+      telemetry: 'PULSE_NOMINAL'
+    },
+    { 
+      id: 'THE_INTAKE', 
+      status: 'OPERATIONAL', 
+      frequency: 'Matrix Green',
+      role: 'Media ingress and yt-dlp remux telemetry',
+      telemetry: 'STREAM_READY'
+    },
+    { 
+      id: 'THE_VOID_LINE', 
+      status: 'MONITORING', 
+      frequency: 'Oxygen Blue',
+      role: 'Node 1132 signal reception and relay',
+      telemetry: 'SIGNAL_CLEAR'
+    },
+    { 
+      id: 'THE_SHADOW', 
+      status: 'SECURED', 
+      frequency: 'Signal Violet',
+      role: 'Ghost ID authority and authentication layer',
+      telemetry: 'AUTH_LOCKED'
+    },
+    { 
+      id: 'THE_ANCHOR', 
+      status: 'SYNCED', 
+      frequency: 'Ghost Grey',
+      role: 'Flat-file ledger and immutable audit trail',
+      telemetry: 'LEDGER_SYNC'
+    }
+  ]
+
   const getSystemStatus = () => {
     const uptime = Math.floor(Math.random() * 72) + 12
     return [
@@ -42,6 +80,9 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
       ``,
       `AVAILABLE COMMANDS:`,
       `  auth       :: Initialize Ghost Authority`,
+      `  about      :: Studio manifesto and philosophy`,
+      `  contact    :: Communication channels`,
+      `  vessels    :: Detailed vessel diagnostics`,
       `  help       :: Display this message`,
       `  status     :: System diagnostics`,
       `  projects   :: List active vessels`,
@@ -58,6 +99,73 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
       ...projects.map(p => `[${p.status}] ${p.name}\n  └─ ${p.desc}`),
       ``,
       `TOTAL :: ${projects.length} systems online`
+    ].join('\n')
+  }
+
+  const getAboutText = () => {
+    return [
+      `FRISKY DEVELOPMENTS :: BOUTIQUE STUDIO`,
+      ``,
+      `PHILOSOPHY`,
+      `  Premium mischievous intelligence`,
+      `  Elegant systems with occult precision`,
+      `  Myth-tech architecture`,
+      ``,
+      `APPROACH`,
+      `  Command-driven interfaces`,
+      `  Cinematic user experiences`,
+      `  Stateless Ghost ID protocol`,
+      `  Sub-6s delivery pipelines`,
+      `  Immutable audit trails`,
+      ``,
+      `DOCTRINE`,
+      `  Build systems that feel alive`,
+      `  Create tools for internal authority`,
+      `  Design with narrative weight`,
+      `  Engineer with premium restraint`,
+      ``,
+      `STATUS :: SYNDICATE_STANDARD`
+    ].join('\n')
+  }
+
+  const getContactText = () => {
+    return [
+      `COMMUNICATION CHANNELS :: FRISKY SYNDICATE`,
+      ``,
+      `SIGNAL_CHANNELS`,
+      `  → GitHub      :: github.com/friskydevelopments`,
+      `  → Signal      :: Secure channel only`,
+      `  → Terminal    :: Direct command interface`,
+      ``,
+      `PROTOCOL`,
+      `  All communications encrypted`,
+      `  Ghost ID authentication required`,
+      `  Response time: Sub-6h standard`,
+      ``,
+      `ENGAGEMENT_TERMS`,
+      `  Boutique projects only`,
+      `  Premium clients`,
+      `  Syndicate-level authority`,
+      ``,
+      `STATUS :: SIGNALS_MONITORED`
+    ].join('\n')
+  }
+
+  const getVesselsText = () => {
+    return [
+      `VESSEL DIAGNOSTICS :: PENTAD ARCHITECTURE`,
+      ``,
+      ...vessels.map(v => 
+        `╭─ ${v.id}\n` +
+        `│  STATUS      :: ${v.status}\n` +
+        `│  FREQUENCY   :: ${v.frequency}\n` +
+        `│  ROLE        :: ${v.role}\n` +
+        `│  TELEMETRY   :: ${v.telemetry}\n` +
+        `╰─────────────────────────────────────────`
+      ),
+      ``,
+      `TOPOLOGY :: PENTAD_CONSTELLATION`,
+      `SYNC_STATE :: ALL_VESSELS_NOMINAL`
     ].join('\n')
   }
 
@@ -79,6 +187,15 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
       setTimeout(() => {
         onAuthenticated?.(id)
       }, 1200)
+    } else if (command === 'about') {
+      response = getAboutText()
+      type = 'info'
+    } else if (command === 'contact') {
+      response = getContactText()
+      type = 'info'
+    } else if (command === 'vessels') {
+      response = getVesselsText()
+      type = 'success'
     } else if (command === 'help' || command === '?') {
       response = getHelpText()
       type = 'info'
