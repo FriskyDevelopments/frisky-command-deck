@@ -80,13 +80,21 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
       ``,
       `AVAILABLE COMMANDS:`,
       `  auth       :: Initialize Ghost Authority`,
+      `               (aliases: authenticate, login)`,
       `  about      :: Studio manifesto and philosophy`,
+      `               (aliases: info, manifesto)`,
       `  contact    :: Communication channels`,
+      `               (aliases: reach, connect, signal)`,
       `  vessels    :: Detailed vessel diagnostics`,
+      `               (aliases: diagnostics, fleet)`,
       `  help       :: Display this message`,
+      `               (aliases: ?)`,
       `  status     :: System diagnostics`,
+      `               (aliases: sys, health)`,
       `  projects   :: List active vessels`,
+      `               (aliases: list, work)`,
       `  clear      :: Clear command history`,
+      `               (aliases: cls, reset)`,
       ``,
       `TYPE ANY COMMAND AND PRESS ENTER`
     ].join('\n')
@@ -173,11 +181,32 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     e.preventDefault()
     if (!input.trim()) return
 
-    const command = input.toLowerCase().trim()
+    const rawCommand = input.toLowerCase().trim()
     let response = ''
     let type: 'success' | 'info' | 'error' = 'info'
 
-    if (command === 'auth' || command === 'authenticate') {
+    const commandAliases: Record<string, string> = {
+      'authenticate': 'auth',
+      'login': 'auth',
+      '?': 'help',
+      'sys': 'status',
+      'health': 'status',
+      'list': 'projects',
+      'work': 'projects',
+      'info': 'about',
+      'manifesto': 'about',
+      'reach': 'contact',
+      'connect': 'contact',
+      'signal': 'contact',
+      'diagnostics': 'vessels',
+      'fleet': 'vessels',
+      'cls': 'clear',
+      'reset': 'clear'
+    }
+
+    const command = commandAliases[rawCommand] || rawCommand
+
+    if (command === 'auth') {
       const id = `GX-${Math.random().toString(36).substr(2, 4).toUpperCase()}`
       response = `[OK] GHOST_AUTHORITY_SYNCED\n[OK] GHOST_ID :: ${id}\n[OK] ACCESS_GRANTED`
       setIsAuthenticated(true)
@@ -186,7 +215,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
       setTimeout(() => {
         onAuthenticated?.(id)
       }, 1200)
-    } else if (command === 'help' || command === '?') {
+    } else if (command === 'help') {
       response = getHelpText()
     } else if (command === 'status') {
       response = getSystemStatus()
