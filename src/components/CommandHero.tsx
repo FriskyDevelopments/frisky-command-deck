@@ -1,15 +1,65 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface CommandHeroProps {
   onAuthenticated?: (ghostId: string) => void
+}
+
+interface CommandHistory {
+  command: string
+  response: string
+  type: 'success' | 'info' | 'error'
 }
 
 export function CommandHero({ onAuthenticated }: CommandHeroProps) {
   const [input, setInput] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [ghostId, setGhostId] = useState('')
-  const [response, setResponse] = useState<string | null>(null)
+  const [history, setHistory] = useState<CommandHistory[]>([])
+
+  const projects = [
+    { name: 'CLIPFLOW', status: 'ACTIVE', desc: 'Sub-6s media remux pipeline' },
+    { name: 'VOID_LINE', status: 'MONITORING', desc: 'Node 1132 signal ingress' },
+    { name: 'GHOST_AUTH', status: 'SECURED', desc: 'HMAC-SHA256 identity layer' },
+    { name: 'FLAT_LEDGER', status: 'SYNCED', desc: 'Immutable audit trail' }
+  ]
+
+  const getSystemStatus = () => {
+    const uptime = Math.floor(Math.random() * 72) + 12
+    return [
+      `CORE_STATUS :: OPERATIONAL`,
+      `WOLF_ENGINE :: ACTIVE`,
+      `UPTIME :: ${uptime}h ${Math.floor(Math.random() * 60)}m`,
+      `GHOST_AUTH :: ${isAuthenticated ? 'VERIFIED' : 'STANDBY'}`,
+      `VESSELS :: 5/5 ONLINE`,
+      `SYNC_STATE :: NOMINAL`
+    ].join('\n')
+  }
+
+  const getHelpText = () => {
+    return [
+      `FRISKY COMMAND INTERFACE v2.1.0`,
+      ``,
+      `AVAILABLE COMMANDS:`,
+      `  auth       :: Initialize Ghost Authority`,
+      `  help       :: Display this message`,
+      `  status     :: System diagnostics`,
+      `  projects   :: List active vessels`,
+      `  clear      :: Clear command history`,
+      ``,
+      `TYPE ANY COMMAND AND PRESS ENTER`
+    ].join('\n')
+  }
+
+  const getProjectsList = () => {
+    return [
+      `ACTIVE VESSELS :: FRISKY SYNDICATE`,
+      ``,
+      ...projects.map(p => `[${p.status}] ${p.name}\n  └─ ${p.desc}`),
+      ``,
+      `TOTAL :: ${projects.length} systems online`
+    ].join('\n')
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,28 +67,49 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     if (!input.trim()) return
 
     const command = input.toLowerCase().trim()
+    let response = ''
+    let type: 'success' | 'info' | 'error' = 'info'
 
     if (command === 'auth' || command === 'authenticate') {
       const id = `GX-${Math.random().toString(36).substr(2, 4).toUpperCase()}`
       setGhostId(id)
       setIsAuthenticated(true)
-      setResponse(`GHOST_AUTHORITY_VERIFIED :: ${id}`)
+      response = `GHOST_AUTHORITY_VERIFIED :: ${id}\nACCESS_GRANTED :: SYNDICATE_LEVEL`
+      type = 'success'
       setTimeout(() => {
         onAuthenticated?.(id)
       }, 1200)
     } else if (command === 'help' || command === '?') {
-      setResponse('AVAILABLE_COMMANDS :: auth | help | status | clear')
+      response = getHelpText()
+      type = 'info'
     } else if (command === 'status') {
-      setResponse('SYSTEM_STATUS :: OPERATIONAL')
+      response = getSystemStatus()
+      type = 'success'
+    } else if (command === 'projects') {
+      response = getProjectsList()
+      type = 'info'
     } else if (command === 'clear') {
-      setResponse(null)
+      setHistory([])
       setInput('')
       return
     } else {
-      setResponse(`UNKNOWN_COMMAND :: ${input}`)
+      response = `UNKNOWN_COMMAND :: "${input}"\nTYPE "help" FOR AVAILABLE COMMANDS`
+      type = 'error'
     }
 
+    setHistory(prev => [...prev, { command: input, response, type }])
     setInput('')
+  }
+
+  const getResponseColor = (type: 'success' | 'info' | 'error') => {
+    switch (type) {
+      case 'success':
+        return 'rgba(6, 182, 212, 0.9)'
+      case 'error':
+        return 'rgba(239, 68, 68, 0.8)'
+      default:
+        return 'rgba(156, 163, 175, 0.9)'
+    }
   }
 
   return (
@@ -64,6 +135,44 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
+          <div className="space-y-4 mb-4 max-h-96 overflow-y-auto">
+            <AnimatePresence>
+              {history.map((entry, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center gap-3 px-6 py-2 bg-card/10 backdrop-blur-sm border border-border/20 rounded-lg">
+                    <span className="font-mono text-muted-foreground text-xs shrink-0">
+                      frisky@forge:~$
+                    </span>
+                    <span className="font-mono text-sm text-foreground/70">
+                      {entry.command}
+                    </span>
+                  </div>
+                  
+                  <div className="px-6 py-3 bg-card/20 backdrop-blur-sm border border-border/30 rounded-lg">
+                    <pre
+                      className="font-mono text-xs whitespace-pre-wrap"
+                      style={{
+                        color: getResponseColor(entry.type),
+                        textShadow: entry.type === 'success' 
+                          ? '0 0 10px rgba(6, 182, 212, 0.3)'
+                          : 'none'
+                      }}
+                    >
+                      {entry.response}
+                    </pre>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
           <form onSubmit={handleSubmit} className="relative">
             <div className="flex items-center gap-3 bg-card/30 backdrop-blur-md border border-border/50 rounded-lg px-6 py-4">
               <span className="font-mono text-primary text-sm shrink-0">
@@ -73,7 +182,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={isAuthenticated ? 'enter command...' : 'type "auth" to begin'}
+                placeholder={isAuthenticated ? 'enter command...' : 'type "help" to begin'}
                 className="flex-1 bg-transparent border-none outline-none text-foreground font-mono text-sm placeholder:text-muted-foreground/50"
                 autoFocus
               />
@@ -84,31 +193,6 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
               />
             </div>
           </form>
-
-          {response && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-4 px-6 py-3 bg-card/20 backdrop-blur-sm border border-border/30 rounded-lg"
-            >
-              <p
-                className="font-mono text-sm"
-                style={{
-                  color: response.includes('VERIFIED') || response.includes('OPERATIONAL')
-                    ? 'rgba(6, 182, 212, 0.9)'
-                    : response.includes('UNKNOWN')
-                    ? 'rgba(239, 68, 68, 0.8)'
-                    : 'rgba(156, 163, 175, 0.9)',
-                  textShadow: response.includes('VERIFIED')
-                    ? '0 0 10px rgba(6, 182, 212, 0.3)'
-                    : 'none'
-                }}
-              >
-                {response}
-              </p>
-            </motion.div>
-          )}
 
           {isAuthenticated && ghostId && (
             <motion.div
