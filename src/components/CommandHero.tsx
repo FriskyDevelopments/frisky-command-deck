@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface CommandHeroProps {
@@ -16,6 +16,18 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [ghostId, setGhostId] = useState('')
   const [history, setHistory] = useState<CommandHistory[]>([])
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0)
+
+  const allCommands = [
+    'auth', 'authenticate', 'login',
+    'help', '?',
+    'status', 'sys', 'health',
+    'projects', 'list', 'work',
+    'about', 'info', 'manifesto',
+    'contact', 'reach', 'connect', 'signal',
+    'vessels', 'diagnostics', 'fleet',
+    'clear', 'cls', 'reset'
+  ]
 
   const projects = [
     { name: 'CLIPFLOW', status: 'ACTIVE', desc: 'Sub-6s media remux pipeline' },
@@ -177,6 +189,45 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     ].join('\n')
   }
 
+  const suggestions = useMemo(() => {
+    if (!input.trim()) return []
+    const inputLower = input.toLowerCase().trim()
+    const uniqueSuggestions = new Set<string>()
+    
+    allCommands.forEach(cmd => {
+      if (cmd.startsWith(inputLower) && cmd !== inputLower) {
+        uniqueSuggestions.add(cmd)
+      }
+    })
+    
+    return Array.from(uniqueSuggestions).slice(0, 5)
+  }, [input])
+
+  useEffect(() => {
+    setSelectedSuggestionIndex(0)
+  }, [suggestions])
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (suggestions.length === 0) return
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setSelectedSuggestionIndex(prev => 
+        prev < suggestions.length - 1 ? prev + 1 : 0
+      )
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setSelectedSuggestionIndex(prev => 
+        prev > 0 ? prev - 1 : suggestions.length - 1
+      )
+    } else if (e.key === 'Tab') {
+      e.preventDefault()
+      if (suggestions.length > 0) {
+        setInput(suggestions[selectedSuggestionIndex])
+      }
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim()) return
@@ -324,6 +375,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder={isAuthenticated ? 'enter command...' : 'type "help" to begin'}
                 className="flex-1 bg-transparent border-none outline-none text-foreground font-mono text-sm placeholder:text-muted-foreground/50"
                 autoFocus
@@ -334,6 +386,47 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
                 className="w-2 h-5 bg-primary"
               />
             </div>
+
+            <AnimatePresence>
+              {suggestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-full mt-2 left-0 right-0 bg-card/90 backdrop-blur-md border border-border/50 rounded-lg overflow-hidden"
+                >
+                  <div className="px-4 py-2 text-xs text-muted-foreground border-b border-border/30 flex items-center justify-between">
+                    <span>SUGGESTIONS</span>
+                    <span className="text-[10px]">↑↓ navigate • TAB autocomplete</span>
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    {suggestions.map((suggestion, idx) => (
+                      <motion.button
+                        key={suggestion}
+                        type="button"
+                        onClick={() => {
+                          setInput(suggestion)
+                        }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.03 }}
+                        className={`w-full px-6 py-3 text-left font-mono text-sm transition-all ${
+                          idx === selectedSuggestionIndex
+                            ? 'bg-primary/20 text-primary border-l-2 border-primary'
+                            : 'text-foreground/70 hover:bg-muted/20 border-l-2 border-transparent'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-accent text-xs">→</span>
+                          {suggestion}
+                        </span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </form>
         </motion.div>
       </div>
