@@ -169,61 +169,68 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     ].join('\n')
   }
 
-    e.preventDefault()
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim()) return
 
-
+    const command = input.toLowerCase().trim()
     let response = ''
-    let response = ''s' | 'info' | 'error' = 'info'
     let type: 'success' | 'info' | 'error' = 'info'
-e') {
-    if (command === 'auth' || command === 'authenticate') { 4).toUpperCase()}`
+
+    if (command === 'auth' || command === 'authenticate') {
+      const id = `GX-${Math.random().toString(36).substr(2, 4).toUpperCase()}`
+      response = `[OK] GHOST_AUTHORITY_SYNCED\n[OK] GHOST_ID :: ${id}\n[OK] ACCESS_GRANTED`
       setIsAuthenticated(true)
       setGhostId(id)
       type = 'success'
       setTimeout(() => {
+        onAuthenticated?.(id)
       }, 1200)
     } else if (command === 'help' || command === '?') {
       response = getHelpText()
-      }, 1200)
     } else if (command === 'status') {
+      response = getSystemStatus()
       type = 'success'
-      type = 'info'
+    } else if (command === 'projects') {
       response = getProjectsList()
       type = 'info'
+    } else if (command === 'about') {
+      response = getAboutText()
+      type = 'info'
+    } else if (command === 'contact') {
+      response = getContactText()
+      type = 'info'
+    } else if (command === 'vessels') {
+      response = getVesselsText()
+      type = 'info'
     } else if (command === 'clear') {
-    } else if (command === 'projects') {
+      setHistory([])
       setInput('')
       return
     } else {
+      response = `[ERROR] UNKNOWN_COMMAND :: "${input}"\n\nType "help" for available commands`
       type = 'error'
-      setInput('')
+    }
 
     setHistory(prev => [...prev, { command: input, response, type }])
     setInput('')
+  }
 
-    }pe: 'success' | 'info' | 'error') => {
- switch (type) {
+  const getResponseColor = (type: 'success' | 'info' | 'error') => {
+    switch (type) {
       case 'success':
         return 'rgba(6, 182, 212, 0.9)'
       case 'error':
         return 'rgba(239, 68, 68, 0.8)'
-  const getResponseColor = (type: 'success' | 'info' | 'error') => {
-    switch (type) {a(156, 163, 175, 0.9)'
-      case 'success':
-        return 'rgba(6, 182, 212, 0.9)'
+      default:
+        return 'rgba(156, 163, 175, 0.9)'
+    }
+  }
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-8">
       <div className="w-full max-w-4xl">
-    }
-  }
-y: 1, y: 0 }}
-  return (, ease: [0.16, 1, 0.3, 1] }}
-    <div className="relative min-h-screen flex items-center justify-center px-8">
-      <div className="w-full max-w-4xl">
-          <h1 className="text-6xl md:text-8xl font-extralight tracking-[0.4em] uppercase mb-6 text-foreground">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -232,6 +239,11 @@ y: 1, y: 0 }}
           <h1 className="text-6xl md:text-8xl font-extralight tracking-[0.4em] uppercase mb-6 text-foreground">
             Frisky
           </h1>
+          <p className="text-sm uppercase tracking-widest text-muted-foreground font-light">
+            Boutique Development Studio
+          </p>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -241,6 +253,14 @@ y: 1, y: 0 }}
             <AnimatePresence>
               {history.map((entry, idx) => (
                 <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center gap-2 px-2">
+                    <span className="font-mono text-primary text-sm">
                       frisky@forge:~$
                     </span>
                     <span className="font-mono text-sm text-foreground/70">
@@ -252,21 +272,6 @@ y: 1, y: 0 }}
                     <pre
                       className="font-mono text-xs whitespace-pre-wrap"
                       style={{
-                        color: getResponseColor(entry.type),
-                        textShadow: entry.type === 'success' 
-                          ? '0 0 10px rgba(6, 182, 212, 0.3)'
-                          : 'none'
-                      }}
-                    >
-                      {entry.response}
-                    </pre>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-
-          <form onSubmit={handleSubmit} className="relative">
                         color: getResponseColor(entry.type),
                         textShadow: entry.type === 'success' 
                           ? '0 0 10px rgba(6, 182, 212, 0.3)'
@@ -301,7 +306,6 @@ y: 1, y: 0 }}
               />
             </div>
           </form>
-
         </motion.div>
       </div>
     </div>
