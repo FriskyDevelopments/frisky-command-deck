@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useHaptic } from '@/hooks/use-haptic'
 
 interface CommandHeroProps {
   onAuthenticated?: (ghostId: string) => void
@@ -76,6 +77,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
   const [history, setHistory] = useState<CommandHistory[]>([])
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0)
   const prevIndexRef = useRef(0)
+  const { haptic } = useHaptic()
 
   const allCommands = [
     'auth', 'authenticate', 'login',
@@ -282,17 +284,20 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
 
     if (e.key === 'ArrowDown') {
       e.preventDefault()
+      haptic('selection')
       setSelectedSuggestionIndex(prev => 
         prev < suggestions.length - 1 ? prev + 1 : 0
       )
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
+      haptic('selection')
       setSelectedSuggestionIndex(prev => 
         prev > 0 ? prev - 1 : suggestions.length - 1
       )
     } else if (e.key === 'Tab') {
       e.preventDefault()
       if (suggestions.length > 0) {
+        haptic('light')
         playSelectSound()
         setInput(suggestions[selectedSuggestionIndex])
       }
@@ -329,6 +334,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     const command = commandAliases[rawCommand] || rawCommand
 
     if (command === 'auth') {
+      haptic('impact')
       const id = `GX-${Math.random().toString(36).substr(2, 4).toUpperCase()}`
       response = `[OK] GHOST_AUTHORITY_SYNCED\n[OK] GHOST_ID :: ${id}\n[OK] ACCESS_GRANTED`
       setIsAuthenticated(true)
@@ -338,27 +344,35 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
         onAuthenticated?.(id)
       }, 1200)
     } else if (command === 'help') {
+      haptic('light')
       response = getHelpText()
     } else if (command === 'status') {
+      haptic('medium')
       response = getSystemStatus()
       type = 'success'
     } else if (command === 'projects') {
+      haptic('light')
       response = getProjectsList()
       type = 'info'
     } else if (command === 'about') {
+      haptic('light')
       response = getAboutText()
       type = 'info'
     } else if (command === 'contact') {
+      haptic('light')
       response = getContactText()
       type = 'info'
     } else if (command === 'vessels') {
+      haptic('medium')
       response = getVesselsText()
       type = 'info'
     } else if (command === 'clear') {
+      haptic('light')
       setHistory([])
       setInput('')
       return
     } else {
+      haptic('notification')
       response = `[ERROR] UNKNOWN_COMMAND :: "${input}"\n\nType "help" for available commands`
       type = 'error'
     }
@@ -485,11 +499,13 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
                         key={suggestion}
                         type="button"
                         onClick={() => {
+                          haptic('light')
                           playSelectSound()
                           setInput(suggestion)
                         }}
                         onMouseEnter={() => {
                           if (idx !== selectedSuggestionIndex) {
+                            haptic('selection')
                             const direction = idx > selectedSuggestionIndex ? 'down' : 'up'
                             playNavigationSound(direction)
                             setSelectedSuggestionIndex(idx)

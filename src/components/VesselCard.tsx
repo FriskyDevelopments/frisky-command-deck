@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { useHaptic } from '@/hooks/use-haptic'
 
 interface VesselCardProps {
   title: string
@@ -24,6 +25,13 @@ export function VesselCard({
   isCenter = false,
   isEngine = false
 }: VesselCardProps) {
+  const { haptic } = useHaptic()
+
+  const handleHover = () => {
+    haptic(isEngine ? 'medium' : 'light')
+    onHover?.()
+  }
+
   return (
     <div
       className={cn(
@@ -31,8 +39,9 @@ export function VesselCard({
         isCenter && 'md:col-span-2',
         isEngine && 'shadow-2xl'
       )}
-      onMouseEnter={onHover}
+      onMouseEnter={handleHover}
       onMouseLeave={onLeave}
+      onTouchStart={handleHover}
       style={{
         borderColor: isEngine ? `${accentColor}60` : `${accentColor}20`,
         boxShadow: isEngine ? `0 0 40px ${accentColor}30, 0 0 80px ${accentColor}15` : undefined
