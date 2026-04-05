@@ -1,8 +1,66 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface CommandHeroProps {
   onAuthenticated?: (ghostId: string) => void
+}
+
+const createAudioContext = () => {
+  if (typeof window === 'undefined') return null
+  return new (window.AudioContext || (window as any).webkitAudioContext)()
+}
+
+const playNavigationSound = (direction: 'up' | 'down') => {
+  const audioContext = createAudioContext()
+  if (!audioContext) return
+
+  const oscillator = audioContext.createOscillator()
+  const gainNode = audioContext.createGain()
+  
+  oscillator.connect(gainNode)
+  gainNode.connect(audioContext.destination)
+  
+  oscillator.type = 'sine'
+  oscillator.frequency.setValueAtTime(
+    direction === 'down' ? 440 : 550,
+    audioContext.currentTime
+  )
+  
+  gainNode.gain.setValueAtTime(0.1, audioContext.currentTime)
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.01,
+    audioContext.currentTime + 0.08
+  )
+  
+  oscillator.start(audioContext.currentTime)
+  oscillator.stop(audioContext.currentTime + 0.08)
+}
+
+const playSelectSound = () => {
+  const audioContext = createAudioContext()
+  if (!audioContext) return
+
+  const oscillator = audioContext.createOscillator()
+  const gainNode = audioContext.createGain()
+  
+  oscillator.connect(gainNode)
+  gainNode.connect(audioContext.destination)
+  
+  oscillator.type = 'triangle'
+  oscillator.frequency.setValueAtTime(660, audioContext.currentTime)
+  oscillator.frequency.exponentialRampToValueAtTime(
+    880,
+    audioContext.currentTime + 0.1
+  )
+  
+  gainNode.gain.setValueAtTime(0.12, audioContext.currentTime)
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.01,
+    audioContext.currentTime + 0.15
+  )
+  
+  oscillator.start(audioContext.currentTime)
+  oscillator.stop(audioContext.currentTime + 0.15)
 }
 
 interface CommandHistory {
@@ -17,6 +75,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
   const [ghostId, setGhostId] = useState('')
   const [history, setHistory] = useState<CommandHistory[]>([])
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0)
+  const prevIndexRef = useRef(0)
 
   const allCommands = [
     'auth', 'authenticate', 'login',
@@ -205,7 +264,18 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
 
   useEffect(() => {
     setSelectedSuggestionIndex(0)
+    prevIndexRef.current = 0
   }, [suggestions])
+
+  useEffect(() => {
+    if (suggestions.length === 0) return
+    
+    if (selectedSuggestionIndex !== prevIndexRef.current) {
+      const direction = selectedSuggestionIndex > prevIndexRef.current ? 'down' : 'up'
+      playNavigationSound(direction)
+      prevIndexRef.current = selectedSuggestionIndex
+    }
+  }, [selectedSuggestionIndex, suggestions.length])
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (suggestions.length === 0) return
@@ -223,6 +293,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     } else if (e.key === 'Tab') {
       e.preventDefault()
       if (suggestions.length > 0) {
+        playSelectSound()
         setInput(suggestions[selectedSuggestionIndex])
       }
     }
@@ -414,7 +485,15 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
                         key={suggestion}
                         type="button"
                         onClick={() => {
+                          playSelectSound()
                           setInput(suggestion)
+                        }}
+                        onMouseEnter={() => {
+                          if (idx !== selectedSuggestionIndex) {
+                            const direction = idx > selectedSuggestionIndex ? 'down' : 'up'
+                            playNavigationSound(direction)
+                            setSelectedSuggestionIndex(idx)
+                          }
                         }}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ 
