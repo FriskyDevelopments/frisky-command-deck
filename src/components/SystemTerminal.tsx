@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useTypingEffect } from '@/hooks/use-typing-effect'
 
 const logMessages = [
   '[SYSTEM] ☕ Coffee: Critical',
@@ -24,19 +25,44 @@ const logMessages = [
   '[SHADOW] Ghost_ID GX-4D8E logged'
 ]
 
+interface LogEntry {
+  id: string
+  timestamp: string
+  message: string
+  isTyping: boolean
+}
+
 export function SystemTerminal() {
-  const [logs, setLogs] = useState<string[]>([])
+  const [logs, setLogs] = useState<LogEntry[]>([])
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setLogs([logMessages[0]])
+    const timestamp = new Date().toLocaleTimeString()
+    setLogs([{
+      id: `${Date.now()}-0`,
+      timestamp,
+      message: logMessages[0],
+      isTyping: false
+    }])
 
     const interval = setInterval(() => {
+      const timestamp = new Date().toLocaleTimeString()
+      const nextMessage = logMessages[Math.floor(Math.random() * logMessages.length)]
+      
       setLogs((prev) => {
-        const nextMessage = logMessages[Math.floor(Math.random() * logMessages.length)]
-        const newLogs = [...prev, nextMessage]
+        const newLog: LogEntry = {
+          id: `${Date.now()}-${Math.random()}`,
+          timestamp,
+          message: nextMessage,
+          isTyping: true
+        }
+        const newLogs = [...prev, newLog]
         return newLogs.slice(-8)
       })
+
+      setTimeout(() => {
+        setLogs(prev => prev.map(log => ({ ...log, isTyping: false })))
+      }, nextMessage.length * 30 + 100)
     }, Math.random() * 3000 + 2000)
 
     return () => clearInterval(interval)
@@ -63,17 +89,41 @@ export function SystemTerminal() {
         <ScrollArea className="h-14" ref={scrollRef}>
           <div className="space-y-1">
             {logs.map((log, index) => (
-              <div
-                key={`${log}-${index}`}
-                className={`terminal-log ${index < logs.length - 3 ? 'old' : ''}`}
-              >
-                <span className="text-accent">[{new Date().toLocaleTimeString()}]</span>{' '}
-                <span className="text-foreground/80">{log}</span>
-              </div>
+              <TerminalLine
+                key={log.id}
+                timestamp={log.timestamp}
+                message={log.message}
+                isTyping={log.isTyping}
+                isOld={index < logs.length - 3}
+              />
             ))}
           </div>
         </ScrollArea>
       </div>
+    </div>
+  )
+}
+
+interface TerminalLineProps {
+  timestamp: string
+  message: string
+  isTyping: boolean
+  isOld: boolean
+}
+
+function TerminalLine({ timestamp, message, isTyping, isOld }: TerminalLineProps) {
+  const { displayedText } = useTypingEffect(message, 30)
+  const text = isTyping ? displayedText : message
+
+  return (
+    <div className={`terminal-log ${isOld ? 'old' : ''}`}>
+      <span className="text-accent">[{timestamp}]</span>{' '}
+      <span className="text-foreground/80">
+        {text}
+        {isTyping && text.length < message.length && (
+          <span className="inline-block w-1 h-3 ml-0.5 bg-accent animate-pulse" />
+        )}
+      </span>
     </div>
   )
 }
