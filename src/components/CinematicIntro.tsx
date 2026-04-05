@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { RuneAwakening } from './RuneAwakening'
+import { useHaptic } from '@/hooks/use-haptic'
 
 interface CinematicIntroProps {
   onComplete: () => void
@@ -29,35 +30,44 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
   const [visibleLines, setVisibleLines] = useState<typeof RUNE_DOCTRINE_LINES>([])
   const [showTitle, setShowTitle] = useState(false)
   const [complete, setComplete] = useState(false)
+  const { haptic } = useHaptic()
 
   useEffect(() => {
     const phaseTimings = [
-      { delay: 0, phase: 'dormant' as Phase },
-      { delay: 4000, phase: 'ignition' as Phase },
-      { delay: 7500, phase: 'awakening' as Phase },
-      { delay: 11000, phase: 'presence' as Phase },
-      { delay: 16000, phase: 'emergence' as Phase },
-      { delay: 18500, phase: 'complete' as Phase }
+      { delay: 0, phase: 'dormant' as Phase, hapticStyle: 'light' as const },
+      { delay: 4000, phase: 'ignition' as Phase, hapticStyle: 'medium' as const },
+      { delay: 7500, phase: 'awakening' as Phase, hapticStyle: 'medium' as const },
+      { delay: 11000, phase: 'presence' as Phase, hapticStyle: 'heavy' as const },
+      { delay: 16000, phase: 'emergence' as Phase, hapticStyle: 'impact' as const },
+      { delay: 18500, phase: 'complete' as Phase, hapticStyle: 'notification' as const }
     ]
 
-    phaseTimings.forEach(({ delay, phase: nextPhase }) => {
-      setTimeout(() => setPhase(nextPhase), delay)
+    phaseTimings.forEach(({ delay, phase: nextPhase, hapticStyle }) => {
+      setTimeout(() => {
+        setPhase(nextPhase)
+        haptic(hapticStyle)
+      }, delay)
     })
 
     RUNE_DOCTRINE_LINES.forEach(line => {
       setTimeout(() => {
         setVisibleLines(prev => [...prev, line])
+        haptic('selection')
       }, line.delay)
     })
 
-    setTimeout(() => setShowTitle(true), 16800)
+    setTimeout(() => {
+      setShowTitle(true)
+      haptic('heavy')
+    }, 16800)
     
     setTimeout(() => {
       setComplete(true)
+      haptic('impact')
       setTimeout(onComplete, 1200)
     }, 19000)
 
-  }, [onComplete])
+  }, [onComplete, haptic])
 
   return (
     <AnimatePresence>

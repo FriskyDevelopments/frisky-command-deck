@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useHaptic } from '@/hooks/use-haptic'
 
 interface IngressTerminalProps {
   onComplete: () => void
@@ -22,19 +23,29 @@ const BOOT_SEQUENCE: LogEntry[] = [
 export function IngressTerminal({ onComplete }: IngressTerminalProps) {
   const [visibleLogs, setVisibleLogs] = useState<LogEntry[]>([])
   const [fadeOut, setFadeOut] = useState(false)
+  const { haptic } = useHaptic()
 
   useEffect(() => {
     BOOT_SEQUENCE.forEach((log) => {
       setTimeout(() => {
         setVisibleLogs((prev) => [...prev, log])
+        
+        if (log.type === 'cursor') {
+          haptic('light')
+        } else if (log.type === 'command') {
+          haptic('medium')
+        } else if (log.type === 'response') {
+          haptic('notification')
+        }
       }, log.delay)
     })
 
     setTimeout(() => {
       setFadeOut(true)
+      haptic('heavy')
       setTimeout(onComplete, 800)
     }, 4500)
-  }, [onComplete])
+  }, [onComplete, haptic])
 
   return (
     <AnimatePresence>
