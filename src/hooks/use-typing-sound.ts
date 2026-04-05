@@ -40,14 +40,14 @@ export function useTypingSound() {
     oscillator.frequency.setValueAtTime(randomFreq, ctx.currentTime)
     oscillator.type = 'sine'
 
-    const baseVolume = 0.03
-    const volumeVariation = Math.random() * 0.02
+    const baseVolume = 0.03 * preferences.soundVolume
+    const volumeVariation = Math.random() * 0.02 * preferences.soundVolume
     gainNode.gain.setValueAtTime(baseVolume + volumeVariation, ctx.currentTime)
     gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05)
 
     oscillator.start(ctx.currentTime)
     oscillator.stop(ctx.currentTime + 0.05)
-  }, [preferences.soundEnabled])
+  }, [preferences.soundEnabled, preferences.soundVolume])
 
   const playEnterSound = useCallback(() => {
     if (!preferences.soundEnabled || !audioContextRef.current) return
@@ -67,12 +67,12 @@ export function useTypingSound() {
     oscillator.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.1)
     oscillator.type = 'triangle'
 
-    gainNode.gain.setValueAtTime(0.08, ctx.currentTime)
+    gainNode.gain.setValueAtTime(0.08 * preferences.soundVolume, ctx.currentTime)
     gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15)
 
     oscillator.start(ctx.currentTime)
     oscillator.stop(ctx.currentTime + 0.15)
-  }, [preferences.soundEnabled])
+  }, [preferences.soundEnabled, preferences.soundVolume])
 
   const playCompleteSound = useCallback(() => {
     if (!preferences.soundEnabled || !audioContextRef.current) return
@@ -95,14 +95,14 @@ export function useTypingSound() {
     oscillator1.type = 'sine'
     oscillator2.type = 'sine'
 
-    gainNode.gain.setValueAtTime(0.06, ctx.currentTime)
+    gainNode.gain.setValueAtTime(0.06 * preferences.soundVolume, ctx.currentTime)
     gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2)
 
     oscillator1.start(ctx.currentTime)
     oscillator2.start(ctx.currentTime)
     oscillator1.stop(ctx.currentTime + 0.2)
     oscillator2.stop(ctx.currentTime + 0.2)
-  }, [preferences.soundEnabled])
+  }, [preferences.soundEnabled, preferences.soundVolume])
 
   return {
     playTypingSound,

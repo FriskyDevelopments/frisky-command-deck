@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion'
 import { usePreferences, type HapticIntensity } from '@/hooks/use-preferences'
 import { useHaptic } from '@/hooks/use-haptic'
+import { useTypingSound } from '@/hooks/use-typing-sound'
 import { Button } from '@/components/ui/button'
-import { X } from '@phosphor-icons/react'
+import { Slider } from '@/components/ui/slider'
+import { Switch } from '@/components/ui/switch'
+import { X, SpeakerHigh, SpeakerSlash } from '@phosphor-icons/react'
 
 interface PreferencesDialogProps {
   isOpen: boolean
@@ -12,6 +15,7 @@ interface PreferencesDialogProps {
 export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
   const { preferences, updatePreferences, resetPreferences } = usePreferences()
   const { haptic, isSupported } = useHaptic()
+  const { playTypingSound } = useTypingSound()
 
   if (!isOpen) return null
 
@@ -36,6 +40,21 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
 
   const handleTest = () => {
     haptic('impact')
+  }
+
+  const handleSoundToggle = (enabled: boolean) => {
+    updatePreferences({ soundEnabled: enabled })
+    if (enabled) {
+      playTypingSound()
+    }
+  }
+
+  const handleVolumeChange = (value: number[]) => {
+    updatePreferences({ soundVolume: value[0] })
+  }
+
+  const handleVolumeTest = () => {
+    playTypingSound()
   }
 
   return (
@@ -172,10 +191,87 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
               </div>
             </div>
 
+            <div className="pt-6 border-t border-border/30">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-sm font-mono uppercase tracking-wider text-foreground mb-1">
+                    Terminal Sound Effects
+                  </h3>
+                  <p className="text-xs font-mono text-muted-foreground">
+                    Configure typing sound effects volume
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  {preferences.soundEnabled && (
+                    <Button
+                      onClick={handleVolumeTest}
+                      variant="outline"
+                      size="sm"
+                      className="font-mono text-xs"
+                    >
+                      TEST
+                    </Button>
+                  )}
+                  <Switch
+                    checked={preferences.soundEnabled}
+                    onCheckedChange={handleSoundToggle}
+                  />
+                </div>
+              </div>
+
+              {preferences.soundEnabled && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="text-muted-foreground">
+                      {preferences.soundVolume === 0 ? (
+                        <SpeakerSlash size={20} />
+                      ) : (
+                        <SpeakerHigh size={20} />
+                      )}
+                    </div>
+                    <Slider
+                      value={[preferences.soundVolume]}
+                      onValueChange={handleVolumeChange}
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      className="flex-1"
+                    />
+                    <div className="w-12 text-right">
+                      <span className="text-xs font-mono text-foreground">
+                        {Math.round(preferences.soundVolume * 100)}%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-muted/10 border border-border/20 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="text-accent text-xs">ℹ</span>
+                      </div>
+                      <div className="space-y-2 text-xs font-mono text-muted-foreground">
+                        <p><span className="text-foreground/80">VOLUME:</span> {Math.round(preferences.soundVolume * 100)}%</p>
+                        <p className="leading-relaxed">
+                          Terminal sound effects play during typing, command execution, and system responses. 
+                          Adjust volume to your preference or disable entirely.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
             <div className="pt-4 border-t border-border/30">
               <div className="flex items-center justify-between">
-                <div className="text-xs font-mono text-muted-foreground">
-                  <span className="text-foreground/80">STATUS:</span> {preferences.hapticIntensity === 'off' ? 'DISABLED' : 'ENABLED'}
+                <div className="text-xs font-mono text-muted-foreground space-y-1">
+                  <p><span className="text-foreground/80">HAPTICS:</span> {preferences.hapticIntensity === 'off' ? 'DISABLED' : 'ENABLED'}</p>
+                  <p><span className="text-foreground/80">SOUND:</span> {preferences.soundEnabled ? `ENABLED (${Math.round(preferences.soundVolume * 100)}%)` : 'DISABLED'}</p>
                 </div>
                 <Button
                   onClick={handleReset}

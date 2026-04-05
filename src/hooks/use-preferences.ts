@@ -5,12 +5,14 @@ export type HapticIntensity = 'off' | 'low' | 'medium' | 'high'
 export interface UserPreferences {
   hapticIntensity: HapticIntensity
   soundEnabled: boolean
+  soundVolume: number
   animationsEnabled: boolean
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
   hapticIntensity: 'medium',
   soundEnabled: true,
+  soundVolume: 0.5,
   animationsEnabled: true
 }
 
