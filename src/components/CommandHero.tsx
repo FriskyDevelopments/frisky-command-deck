@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useHaptic } from '@/hooks/use-haptic'
+import { PreferencesDialog } from '@/components/PreferencesDialog'
 
 interface CommandHeroProps {
   onAuthenticated?: (ghostId: string) => void
@@ -76,6 +77,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
   const [ghostId, setGhostId] = useState('')
   const [history, setHistory] = useState<CommandHistory[]>([])
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0)
+  const [preferencesOpen, setPreferencesOpen] = useState(false)
   const prevIndexRef = useRef(0)
   const { haptic } = useHaptic()
 
@@ -87,6 +89,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     'about', 'info', 'manifesto',
     'contact', 'reach', 'connect', 'signal',
     'vessels', 'diagnostics', 'fleet',
+    'settings', 'preferences', 'config',
     'clear', 'cls', 'reset'
   ]
 
@@ -160,6 +163,8 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
       `               (aliases: reach, connect, signal)`,
       `  vessels    :: Detailed vessel diagnostics`,
       `               (aliases: diagnostics, fleet)`,
+      `  settings   :: Configure system preferences`,
+      `               (aliases: preferences, config)`,
       `  help       :: Display this message`,
       `               (aliases: ?)`,
       `  status     :: System diagnostics`,
@@ -327,6 +332,8 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
       'signal': 'contact',
       'diagnostics': 'vessels',
       'fleet': 'vessels',
+      'preferences': 'settings',
+      'config': 'settings',
       'cls': 'clear',
       'reset': 'clear'
     }
@@ -366,6 +373,11 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
       haptic('medium')
       response = getVesselsText()
       type = 'info'
+    } else if (command === 'settings') {
+      haptic('medium')
+      setPreferencesOpen(true)
+      response = `[OK] OPENING_PREFERENCES_PANEL\n\nConfigure haptic feedback intensity and other system settings.`
+      type = 'success'
     } else if (command === 'clear') {
       haptic('light')
       setHistory([])
@@ -394,6 +406,18 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-8">
+      <AnimatePresence>
+        {preferencesOpen && (
+          <PreferencesDialog
+            isOpen={preferencesOpen}
+            onClose={() => {
+              setPreferencesOpen(false)
+              haptic('light')
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       <div className="w-full max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

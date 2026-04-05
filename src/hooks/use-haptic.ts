@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { usePreferences, type HapticIntensity } from './use-preferences'
 
 type HapticStyle = 'light' | 'medium' | 'heavy' | 'selection' | 'impact' | 'notification'
 
@@ -34,6 +35,19 @@ const vibrationPatterns: Record<HapticStyle, VibrationPattern> = {
   }
 }
 
+const intensityMultipliers: Record<HapticIntensity, number> = {
+  off: 0,
+  low: 0.5,
+  medium: 1.0,
+  high: 1.5
+}
+
+const applyIntensity = (pattern: number[], intensity: HapticIntensity): number[] => {
+  const multiplier = intensityMultipliers[intensity]
+  if (multiplier === 0) return [0]
+  return pattern.map(duration => Math.round(duration * multiplier))
+}
+
 const isHapticSupported = (): boolean => {
   if (typeof window === 'undefined') return false
   
@@ -55,26 +69,29 @@ const hasIOSHapticSupport = (): boolean => {
 }
 
 export function useHaptic() {
-  const triggerVibration = useCallback((pattern: number | number[]) => {
-    if (!isHapticSupported()) return false
+  const { preferences } = usePreferences()
+  
+  const triggerVibration = useCallback((pattern: number | number[], intensity: HapticIntensity) => {
+    if (!isHapticSupported() || intensity === 'off') return false
 
     try {
       const patternArray = Array.isArray(pattern) ? pattern : [pattern]
+      const adjustedPattern = applyIntensity(patternArray, intensity)
       
       if (navigator.vibrate) {
-        return navigator.vibrate(patternArray)
+        return navigator.vibrate(adjustedPattern)
       }
       
       if ((navigator as any).webkitVibrate) {
-        return (navigator as any).webkitVibrate(patternArray)
+        return (navigator as any).webkitVibrate(adjustedPattern)
       }
       
       if ((navigator as any).mozVibrate) {
-        return (navigator as any).mozVibrate(patternArray)
+        return (navigator as any).mozVibrate(adjustedPattern)
       }
       
       if ((navigator as any).msVibrate) {
-        return (navigator as any).msVibrate(patternArray)
+        return (navigator as any).msVibrate(adjustedPattern)
       }
     } catch (error) {
       console.warn('Haptic feedback failed:', error)
@@ -84,12 +101,19 @@ export function useHaptic() {
     return false
   }, [])
 
-  const triggerIOSHaptic = useCallback((style: 'light' | 'medium' | 'heavy') => {
-    if (typeof window === 'undefined') return false
+  const triggerIOSHaptic = useCallback((style: 'light' | 'medium' | 'heavy', intensity: HapticIntensity) => {
+    if (typeof window === 'undefined' || intensity === 'off') return false
 
     try {
+      let adjustedStyle = style
+      if (intensity === 'low') {
+        adjustedStyle = style === 'heavy' ? 'medium' : 'light'
+      } else if (intensity === 'high') {
+        adjustedStyle = style === 'light' ? 'medium' : 'heavy'
+      }
+
       if ((window as any).webkit?.messageHandlers?.haptic) {
-        (window as any).webkit.messageHandlers.haptic.postMessage({ style })
+        (window as any).webkit.messageHandlers.haptic.postMessage({ style: adjustedStyle })
         return true
       }
 
@@ -99,7 +123,7 @@ export function useHaptic() {
           medium: 2,
           heavy: 3
         }
-        ;(window as any).TapticEngine.impact(tapticMap[style])
+        ;(window as any).TapticEngine.impact(tapticMap[adjustedStyle])
         return true
       }
     } catch (error) {
@@ -110,6 +134,10 @@ export function useHaptic() {
   }, [])
 
   const haptic = useCallback((style: HapticStyle = 'medium') => {
+    const intensity = preferences.hapticIntensity
+    
+    if (intensity === 'off') return
+    
     const pattern = vibrationPatterns[style]
     
     if (!pattern) {
@@ -121,12 +149,12 @@ export function useHaptic() {
       : style === 'heavy' || style === 'impact' ? 'heavy' 
       : 'medium'
     
-    const iosSuccess = hasIOSHapticSupport() && triggerIOSHaptic(iosStyle)
+    const iosSuccess = hasIOSHapticSupport() && triggerIOSHaptic(iosStyle, intensity)
     
     if (!iosSuccess) {
-      triggerVibration(pattern.pattern)
+      triggerVibration(pattern.pattern, intensity)
     }
-  }, [triggerVibration, triggerIOSHaptic])
+  }, [preferences.hapticIntensity, triggerVibration, triggerIOSHaptic])
 
   const cancel = useCallback(() => {
     if (isHapticSupported() && navigator.vibrate) {
@@ -138,6 +166,7 @@ export function useHaptic() {
     haptic,
     cancel,
     isSupported: isHapticSupported(),
-    hasIOSSupport: hasIOSHapticSupport()
+    hasIOSSupport: hasIOSHapticSupport(),
+    intensity: preferences.hapticIntensity
   }
 }
