@@ -371,15 +371,23 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
               <span className="font-mono text-primary text-sm shrink-0">
                 frisky@forge:~$
               </span>
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={isAuthenticated ? 'enter command...' : 'type "help" to begin'}
-                className="flex-1 bg-transparent border-none outline-none text-foreground font-mono text-sm placeholder:text-muted-foreground/50"
-                autoFocus
-              />
+              <div className="flex-1 relative">
+                {suggestions.length > 0 && input && (
+                  <div className="absolute inset-0 pointer-events-none font-mono text-sm text-muted-foreground/30">
+                    <span className="invisible">{input}</span>
+                    <span>{suggestions[selectedSuggestionIndex].slice(input.length)}</span>
+                  </div>
+                )}
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={isAuthenticated ? 'enter command...' : 'type "help" to begin'}
+                  className="w-full bg-transparent border-none outline-none text-foreground font-mono text-sm placeholder:text-muted-foreground/50"
+                  autoFocus
+                />
+              </div>
               <motion.div
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
