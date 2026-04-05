@@ -1,7 +1,9 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useHaptic } from '@/hooks/use-haptic'
+import { useTypingSound } from '@/hooks/use-typing-sound'
 import { PreferencesDialog } from '@/components/PreferencesDialog'
+import { TypedResponse } from '@/components/TypedResponse'
 
 interface CommandHeroProps {
   onAuthenticated?: (ghostId: string) => void
@@ -80,6 +82,7 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
   const [preferencesOpen, setPreferencesOpen] = useState(false)
   const prevIndexRef = useRef(0)
   const { haptic } = useHaptic()
+  const { playEnterSound } = useTypingSound()
 
   const allCommands = [
     'auth', 'authenticate', 'login',
@@ -313,6 +316,8 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
     e.preventDefault()
     if (!input.trim()) return
 
+    playEnterSound()
+    
     const rawCommand = input.toLowerCase().trim()
     let response = ''
     let type: 'success' | 'info' | 'error' = 'info'
@@ -467,7 +472,10 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
                           : 'none'
                       }}
                     >
-                      {entry.response}
+                      <TypedResponse 
+                        text={entry.response}
+                        speed={15}
+                      />
                     </pre>
                   </div>
                 </motion.div>
