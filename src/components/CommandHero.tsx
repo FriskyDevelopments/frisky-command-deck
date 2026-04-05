@@ -417,18 +417,51 @@ export function CommandHero({ onAuthenticated }: CommandHeroProps) {
                           setInput(suggestion)
                         }}
                         initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: idx * 0.03 }}
-                        className={`w-full px-6 py-3 text-left font-mono text-sm transition-all ${
+                        animate={{ 
+                          opacity: 1, 
+                          x: 0,
+                          backgroundColor: idx === selectedSuggestionIndex 
+                            ? 'rgba(139, 92, 246, 0.2)' 
+                            : 'rgba(0, 0, 0, 0)'
+                        }}
+                        transition={{ delay: idx * 0.03, duration: 0.2 }}
+                        className={`w-full px-6 py-3 text-left font-mono text-sm transition-all relative ${
                           idx === selectedSuggestionIndex
-                            ? 'bg-primary/20 text-primary border-l-2 border-primary'
+                            ? 'text-primary border-l-2 border-primary'
                             : 'text-foreground/70 hover:bg-muted/20 border-l-2 border-transparent'
                         }`}
+                        style={idx === selectedSuggestionIndex ? {
+                          textShadow: '0 0 12px rgba(139, 92, 246, 0.4)',
+                          boxShadow: 'inset 0 0 20px rgba(139, 92, 246, 0.1)'
+                        } : {}}
                       >
                         <span className="flex items-center gap-2">
-                          <span className="text-accent text-xs">→</span>
+                          <span className={`text-xs transition-all ${
+                            idx === selectedSuggestionIndex 
+                              ? 'text-accent scale-125' 
+                              : 'text-accent/60'
+                          }`}>
+                            {idx === selectedSuggestionIndex ? '▶' : '→'}
+                          </span>
                           {suggestion}
                         </span>
+                        {idx === selectedSuggestionIndex && (
+                          <motion.div
+                            layoutId="activeIndicator"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1"
+                            initial={false}
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                          >
+                            <motion.span 
+                              className="w-1.5 h-1.5 rounded-full bg-primary"
+                              animate={{ scale: [1, 1.3, 1] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                            />
+                            <span className="text-[10px] text-primary/70 uppercase tracking-wider">
+                              selected
+                            </span>
+                          </motion.div>
+                        )}
                       </motion.button>
                     ))}
                   </div>
