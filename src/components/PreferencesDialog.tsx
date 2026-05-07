@@ -57,6 +57,20 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
     playTypingSound()
   }
 
+  const volumePresets = [
+    { label: 'MUTED', value: 0 },
+    { label: 'LOW', value: 0.25 },
+    { label: 'MEDIUM', value: 0.5 },
+    { label: 'HIGH', value: 1 }
+  ]
+
+  const handleVolumePreset = (value: number) => {
+    updatePreferences({ soundVolume: value })
+    if (value > 0) {
+      setTimeout(() => playTypingSound(), 50)
+    }
+  }
+
   return (
     <>
       <motion.div
@@ -226,6 +240,58 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                   exit={{ opacity: 0, height: 0 }}
                   className="space-y-4"
                 >
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    {volumePresets.map((preset) => {
+                      const isActive = Math.abs(preferences.soundVolume - preset.value) < 0.01
+                      
+                      return (
+                        <motion.button
+                          key={preset.label}
+                          onClick={() => handleVolumePreset(preset.value)}
+                          whileHover={{ scale: 1.02, y: -1 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`
+                            relative px-3 py-2 rounded-lg border transition-all text-center
+                            ${isActive 
+                              ? 'bg-primary/20 border-primary shadow-lg shadow-primary/20' 
+                              : 'bg-card/20 border-border/30 hover:border-border/50'
+                            }
+                          `}
+                          style={isActive ? {
+                            boxShadow: '0 0 15px rgba(139, 92, 246, 0.15), inset 0 0 15px rgba(139, 92, 246, 0.08)'
+                          } : {}}
+                        >
+                          <div className={`
+                            text-xs font-mono font-bold tracking-wider
+                            ${isActive ? 'text-primary' : 'text-foreground/70'}
+                          `}>
+                            {preset.label}
+                          </div>
+
+                          {isActive && (
+                            <motion.div
+                              layoutId="activeVolume"
+                              className="absolute inset-0 border-2 border-primary rounded-lg pointer-events-none"
+                              initial={false}
+                              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                            />
+                          )}
+
+                          {isActive && (
+                            <motion.div
+                              className="absolute top-1 right-1"
+                              initial={{ scale: 0, rotate: -180 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                            >
+                              <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                            </motion.div>
+                          )}
+                        </motion.button>
+                      )
+                    })}
+                  </div>
+
                   <div className="flex items-center gap-4">
                     <div className="text-muted-foreground">
                       {preferences.soundVolume === 0 ? (
@@ -258,7 +324,7 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                         <p><span className="text-foreground/80">VOLUME:</span> {Math.round(preferences.soundVolume * 100)}%</p>
                         <p className="leading-relaxed">
                           Terminal sound effects play during typing, command execution, and system responses. 
-                          Adjust volume to your preference or disable entirely.
+                          Use preset buttons for quick selection or fine-tune with the slider.
                         </p>
                       </div>
                     </div>
