@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { usePreferences, type HapticIntensity } from '@/hooks/use-preferences'
 import { useHaptic } from '@/hooks/use-haptic'
 import { useTypingSound } from '@/hooks/use-typing-sound'
@@ -16,6 +17,7 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
   const { preferences, updatePreferences, resetPreferences } = usePreferences()
   const { haptic, isSupported } = useHaptic()
   const { playTypingSound } = useTypingSound()
+  const [volumeFeedbackKey, setVolumeFeedbackKey] = useState(0)
 
   if (!isOpen) return null
 
@@ -66,6 +68,7 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
 
   const handleVolumePreset = (value: number) => {
     updatePreferences({ soundVolume: value })
+    setVolumeFeedbackKey(prev => prev + 1)
     if (value > 0) {
       setTimeout(() => playTypingSound(), 50)
     }
@@ -240,7 +243,7 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                   exit={{ opacity: 0, height: 0 }}
                   className="space-y-4"
                 >
-                  <div className="grid grid-cols-4 gap-2 mb-4">
+                  <div className="grid grid-cols-4 gap-2 mb-4 relative">
                     {volumePresets.map((preset) => {
                       const isActive = Math.abs(preferences.soundVolume - preset.value) < 0.01
                       
@@ -251,7 +254,7 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                           whileHover={{ scale: 1.02, y: -1 }}
                           whileTap={{ scale: 0.98 }}
                           className={`
-                            relative px-3 py-2 rounded-lg border transition-all text-center
+                            relative px-3 py-2 rounded-lg border transition-all text-center overflow-visible
                             ${isActive 
                               ? 'bg-primary/20 border-primary shadow-lg shadow-primary/20' 
                               : 'bg-card/20 border-border/30 hover:border-border/50'
@@ -262,7 +265,7 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                           } : {}}
                         >
                           <div className={`
-                            text-xs font-mono font-bold tracking-wider
+                            text-xs font-mono font-bold tracking-wider relative z-10
                             ${isActive ? 'text-primary' : 'text-foreground/70'}
                           `}>
                             {preset.label}
@@ -279,7 +282,7 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
 
                           {isActive && (
                             <motion.div
-                              className="absolute top-1 right-1"
+                              className="absolute top-1 right-1 z-10"
                               initial={{ scale: 0, rotate: -180 }}
                               animate={{ scale: 1, rotate: 0 }}
                               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
@@ -287,19 +290,82 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                               <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                             </motion.div>
                           )}
+
+                          <AnimatePresence>
+                            {isActive && (
+                              <>
+                                <motion.div
+                                  key={`pulse-1-${volumeFeedbackKey}`}
+                                  className="absolute inset-0 border-2 border-primary rounded-lg pointer-events-none"
+                                  initial={{ scale: 1, opacity: 0.8 }}
+                                  animate={{ scale: 1.5, opacity: 0 }}
+                                  exit={{ opacity: 0 }}
+                                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                                />
+                                <motion.div
+                                  key={`pulse-2-${volumeFeedbackKey}`}
+                                  className="absolute inset-0 border-2 border-primary/60 rounded-lg pointer-events-none"
+                                  initial={{ scale: 1, opacity: 0.6 }}
+                                  animate={{ scale: 2, opacity: 0 }}
+                                  exit={{ opacity: 0 }}
+                                  transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
+                                />
+                                <motion.div
+                                  key={`glow-${volumeFeedbackKey}`}
+                                  className="absolute inset-0 bg-primary/30 rounded-lg pointer-events-none"
+                                  initial={{ opacity: 0.5 }}
+                                  animate={{ opacity: 0 }}
+                                  exit={{ opacity: 0 }}
+                                  transition={{ duration: 0.5 }}
+                                />
+                              </>
+                            )}
+                          </AnimatePresence>
                         </motion.button>
                       )
                     })}
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="text-muted-foreground">
+                  <div className="flex items-center gap-4 relative">
+                    <motion.div 
+                      className="text-muted-foreground relative"
+                      animate={{
+                        scale: preferences.soundVolume > 0 ? [1, 1.15, 1] : 1,
+                        color: preferences.soundVolume > 0.66 ? 'rgb(139, 92, 246)' : preferences.soundVolume > 0.33 ? 'rgb(96, 165, 250)' : 'rgb(156, 163, 175)'
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
                       {preferences.soundVolume === 0 ? (
                         <SpeakerSlash size={20} />
                       ) : (
                         <SpeakerHigh size={20} />
                       )}
-                    </div>
+
+                      <AnimatePresence>
+                        {preferences.soundVolume > 0 && (
+                          <>
+                            {[...Array(Math.ceil(preferences.soundVolume * 3))].map((_, i) => (
+                              <motion.div
+                                key={`wave-${i}-${volumeFeedbackKey}`}
+                                className="absolute top-1/2 -right-1 w-1 bg-primary/40 rounded-full"
+                                initial={{ height: 0, opacity: 0, y: '-50%' }}
+                                animate={{ 
+                                  height: [0, 8 + i * 3, 0],
+                                  opacity: [0, 0.6, 0],
+                                  x: [0, 5 + i * 4, 10 + i * 4]
+                                }}
+                                exit={{ opacity: 0 }}
+                                transition={{ 
+                                  duration: 0.6,
+                                  delay: i * 0.05,
+                                  ease: 'easeOut'
+                                }}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
                     <Slider
                       value={[preferences.soundVolume]}
                       onValueChange={handleVolumeChange}
@@ -308,11 +374,18 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                       step={0.01}
                       className="flex-1"
                     />
-                    <div className="w-12 text-right">
+                    <motion.div 
+                      className="w-12 text-right"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{ duration: 0.3 }}
+                      key={volumeFeedbackKey}
+                    >
                       <span className="text-xs font-mono text-foreground">
                         {Math.round(preferences.soundVolume * 100)}%
                       </span>
-                    </div>
+                    </motion.div>
                   </div>
 
                   <div className="p-4 bg-muted/10 border border-border/20 rounded-lg">
