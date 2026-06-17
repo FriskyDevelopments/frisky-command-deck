@@ -132,7 +132,7 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" role="radiogroup" aria-label="Haptic intensity">
                 {intensityOptions.map((option) => {
                   const isActive = preferences.hapticIntensity === option.value
                   const isDisabled = !isSupported && option.value !== 'off'
@@ -140,6 +140,8 @@ export function PreferencesDialog({ isOpen, onClose }: PreferencesDialogProps) {
                   return (
                     <motion.button
                       key={option.value}
+                      role="radio"
+                      aria-checked={isActive}
                       onClick={() => !isDisabled && handleIntensityChange(option.value)}
                       disabled={isDisabled}
                       whileHover={!isDisabled ? { scale: 1.02, y: -2 } : {}}
