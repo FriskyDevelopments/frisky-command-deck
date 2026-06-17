@@ -26,25 +26,33 @@ export function IngressTerminal({ onComplete }: IngressTerminalProps) {
   const { haptic } = useHaptic()
 
   useEffect(() => {
+    const timeouts: ReturnType<typeof setTimeout>[] = []
+
     BOOT_SEQUENCE.forEach((log) => {
-      setTimeout(() => {
-        setVisibleLogs((prev) => [...prev, log])
-        
-        if (log.type === 'cursor') {
-          haptic('light')
-        } else if (log.type === 'command') {
-          haptic('medium')
-        } else if (log.type === 'response') {
-          haptic('notification')
-        }
-      }, log.delay)
+      timeouts.push(
+        setTimeout(() => {
+          setVisibleLogs((prev) => [...prev, log])
+          
+          if (log.type === 'cursor') {
+            haptic('light')
+          } else if (log.type === 'command') {
+            haptic('medium')
+          } else if (log.type === 'response') {
+            haptic('notification')
+          }
+        }, log.delay)
+      )
     })
 
-    setTimeout(() => {
-      setFadeOut(true)
-      haptic('heavy')
-      setTimeout(onComplete, 800)
-    }, 4500)
+    timeouts.push(
+      setTimeout(() => {
+        setFadeOut(true)
+        haptic('heavy')
+        timeouts.push(setTimeout(onComplete, 800))
+      }, 4500)
+    )
+
+    return () => timeouts.forEach(clearTimeout)
   }, [onComplete, haptic])
 
   return (
